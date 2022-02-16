@@ -4,6 +4,7 @@
 % Total Analysis
 % Use custom functions, which are contained in the func/
 
+eeglab;
 close all; clear; clc
 
 %% Defualt Setting
@@ -27,21 +28,37 @@ if sum(choose_sub) > 0
 end
 
 fprintf('Selected Subjects: ');
-for set_num = 1 : length(f)
-    fprintf('%s ', f(set_num).name);
+for mat_i = 1 : length(f)
+    fprintf('%s ', f(mat_i).name);
 end
 disp(' ');
 
 %% mat2set
+warning('off')
 disp('--------------------   MAT2SET   --------------------')
 for sub_i = 1 : length(f)
     % EEG 폴더 안의 모든 .mat 파일 list 얻기
     mat_list = dir([f(sub_i).folder '\' f(sub_i).name '\EEG\*.mat']); 
-    srate = 512; % sampling rate 설정
+    
+    % optional parameters for mat2set
+    fs = 512; % sampling rate 
+    n_ch = 31; % number of channels
 
     disp([f(sub_i).name]);
     for mat_i = 1 : length(mat_list)
-        EEGset = mat2set(f(mat_i), mat_list(mat_i), srate, 1);
+        EEGset = mat2set(f(sub_i), mat_list(mat_i), fs, n_ch, 'save', 1);
+    end
+end
+warning('on')
+
+%% Filtering
+disp('--------------------  FILTERING  --------------------')
+for sub_i = 1 : length(f)
+    mat_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*min.set']);
+
+    disp([f(sub_i).name]);
+    for mat_i = 1 : length(mat_list)
+        EEGset = B2X2_Filtering_v02(mat_list(mat_i), 1);
     end
 end
 

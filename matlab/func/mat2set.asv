@@ -7,6 +7,7 @@ function EEGset = mat2set(f, mat_list, fs, n_ch, varargin)
     else
         sf = 0;
     end
+
     
     % use pop_importdata() from EEGLAB
     % set input options for the pop_importdata()
@@ -24,9 +25,9 @@ function EEGset = mat2set(f, mat_list, fs, n_ch, varargin)
         'chanlocs', chanlocs, 'nbchan', nbchan, 'srate', srate);
 
     if sf == 1
-        savepath = [mat_list.folder, '\EEGset\'];
+        savepath = [f_list.folder, '\EEGset\'];
         mkdir(savepath);
-        pop_saveset(EEGset, [savepath, '\', setname]);
-        fprintf(" mat2set: EEGset saving... %s\n", setname);
+        pop_saveset(EEGset, [savepath, '\', f_list.name(1:5)]);
+        fprintf(" mat2set: EEGset saving... %s\n", f_list.name(1:5));
     end
 end
