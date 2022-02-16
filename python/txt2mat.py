@@ -30,7 +30,7 @@ from tqdm.notebook import tqdm, trange
 import scipy.io as spio
 # %matplotlib inline
 
-default_path = 'E:\\B2X\\2차년도\\3차 pilot\\subject_data'
+default_path = 'E:\\B2X\\2차년도\\03_pilot\\subject_data'
 default_path
 
 
@@ -56,12 +56,10 @@ total_subject_list
 # ## 분석할 subject 선택
 
 # +
-# XX_HKD 의 XX를 그대로 입력 
-# ex) 05_HKD --> 5
-choose_sub = range(10,21)
+choose_sub = range(len(total_subject_list))
 sub_list = []
-for sub_num in range(len(choose_sub)):
-   sub_list.append(total_subject_list[choose_sub[sub_num]-1])
+for sub_num in range(len(choose_sub)):    
+    sub_list.append(total_subject_list[choose_sub[sub_num]])
     
 print('Target Subjects: {}'.format(sub_list))
 
@@ -95,7 +93,6 @@ def TxtRead(path, filename):
             data = line.strip().split()
             result.append(data)
     return result
-            
 
 
 # -
@@ -127,15 +124,17 @@ for sub_num in tqdm(range(len(choose_sub)), desc='Total Processing'):
             non_header = np.array(non_header, dtype=float)
         non_header_df = pd.DataFrame(non_header)
         
-        # ch34 유무에 따른 if 문
+        # useless channel 제거
+        # ch1 : time 정보 --> 제거
+        # ch2 : noise --> 제거
+        # ch34 : flag --> 제거
+        # 총 34개 채널 중, 3개 채널을 제거하면 31 채널이 남는다
         if non_header_df.shape[1] == 34:
-            # ch34기 존재하면 이는 flag를 저장하기 위한 채널이므로 삭제하여 준다.
-            # ch1은 빈배열이므로 index 0을 이용하여 제거
-            # ch34는index 33을 이용하여 제거
-            non_header_df = non_header_df.drop([0, 33], axis=1)
+            # ch34가 존재하는 경우
+            non_header_df = non_header_df.drop([0, 1, 33], axis=1)
         else:
-            # ch34가 존재하지 않으면, 빈 채널인 ch1만 index 0을 이용하여 제거            
-            non_header_df = non_header_df.drop(0, axis=1)
+            # ch34가 존재하지 않으면, ch1과 ch2만 index 0,1을 이용하여 제거            
+            non_header_df = non_header_df.drop([0, 1], axis=1)
             
         print(" Shape: {}, Size: {}".format(non_header_df.shape, non_header_df.size), end=' --> Save...')
         
@@ -145,21 +144,14 @@ for sub_num in tqdm(range(len(choose_sub)), desc='Total Processing'):
         print("done !")
 
 
-k = []
+k = pd.DataFrame(temp_data[3:])
 
-len(k)
+print(k.iloc[0:10,0])
 
-k = np.arange(0,6)
-print(type(k))
+len(k[0])
 
-t = range(0,5)
+t = range(4)
 
-t[0]
-
-t[1]
-
-t[4]
-
-t[5]
+t[3]
 
 
