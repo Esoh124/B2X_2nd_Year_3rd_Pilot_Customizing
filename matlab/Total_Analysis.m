@@ -4,9 +4,6 @@
 % Total Analysis
 % Use custom functions, which are contained in the func/
 
-eeglab;
-close all; clear; clc
-
 %% Defualt Setting
 
 % --Add path
@@ -16,11 +13,13 @@ close all; clear; clc
 addpath 'E:\B2X\2차년도\03_pilot\CODE\matlab\eeglab2021.1'
 addpath 'E:\B2X\2차년도\03_pilot\CODE\matlab\func'
 addpath 'E:\B2X\2차년도\03_pilot\CODE\matlab\locs'
+eeglab; close all; clear; clc;
 
 % --Data preparation
 data_path = 'E:\B2X\2차년도\03_pilot\subject_data';
 % Choose the subjects who are goning to be analyzed
-choose_sub = [1];
+choose_sub = [1:20];
+% choose_sub = 1;
 f = dir(data_path);
 f = f(3:sum([f.isdir]));
 if sum(choose_sub) > 0
@@ -34,8 +33,8 @@ end
 disp(' ');
 
 %% set the flags for the functions below whether run or not
-%       mat2set    Filtering    SessionDividing    
-flag = [0           0           0];
+%       mat2set    Filtering    SessionDividing     ICA_component_calculation    
+flag = [0           0           0                   0];
 %% mat2set
 warning('off')
 if flag(1) == 1
@@ -60,7 +59,7 @@ end
 if flag(2) == 1
     disp('--------------------  FILTERING  --------------------')
     for sub_i = 1 : length(f)
-        set_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*.set']);
+        set_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*0.set']);
     
         disp([f(sub_i).name]);
         for mat_i = 1 : length(set_list)
@@ -83,12 +82,25 @@ if flag(3) == 1
 end
 
 %% ICA component calculation
-disp('--------------------  ICA Calculation  --------------------')
-for sub_iter = 1 : length(f)
-    set_list = dir([f(sub_iter).folder, '\', f(sub_iter).name, '\EEG\EEGset\*_Reref.set']);
+if flag(4) == 1
+    disp('--------------------  ICA Calculation  --------------------')
+    for sub_i = 1 : length(f)
+        set_list(1:5) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*_base.set']);
+        set_list(6:10) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*_stim.set']);
+        set_list(11:15) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*_reco.set']);
+    
+        disp([f(sub_i).name]);
+        for set_num = 1 : length(set_list)
+            EEGset = ICA_Component_Extraction(set_list(set_num), 'save', 1);
+        end
+    end
+end
 
-    disp([f(sub_iter).name]);
+for sub_i = 1 : length(f)
+    set_list= dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*_ICA.set']);
+    
+    disp([f(sub_i).name]);
     for set_num = 1 : length(set_list)
-        EEGset = B2X2_ICA_Component_Extraction(set_list(set_num), 1);
+        ManualNameChange(set_list(set_num));
     end
 end
