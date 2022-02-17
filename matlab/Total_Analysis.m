@@ -33,33 +33,62 @@ for mat_i = 1 : length(f)
 end
 disp(' ');
 
+%% set the flags for the functions below whether run or not
+%       mat2set    Filtering    SessionDividing    
+flag = [0           0           0];
 %% mat2set
 warning('off')
-disp('--------------------   MAT2SET   --------------------')
-for sub_i = 1 : length(f)
-    % EEG 폴더 안의 모든 .mat 파일 list 얻기
-    mat_list = dir([f(sub_i).folder '\' f(sub_i).name '\EEG\*.mat']); 
+if flag(1) == 1
+    disp('--------------------   MAT2SET   --------------------')
+    for sub_i = 1 : length(f)
+        % EEG 폴더 안의 모든 .mat 파일 list 얻기
+        set_list = dir([f(sub_i).folder '\' f(sub_i).name '\EEG\*.mat']); 
+        
+        % optional parameters for mat2set
+        fs = 512; % sampling rate 
+        n_ch = 31; % number of channels
     
-    % optional parameters for mat2set
-    fs = 512; % sampling rate 
-    n_ch = 31; % number of channels
-
-    disp([f(sub_i).name]);
-    for mat_i = 1 : length(mat_list)
-        EEGset = mat2set(f(sub_i), mat_list(mat_i), fs, n_ch, 'save', 1);
+        disp([f(sub_i).name]);
+        for mat_i = 1 : length(set_list)
+            EEGset = mat2set(f(sub_i), set_list(mat_i), fs, n_ch, 'save', 1);
+        end
     end
+    warning('on')
 end
-warning('on')
 
 %% Filtering
-disp('--------------------  FILTERING  --------------------')
-for sub_i = 1 : length(f)
-    mat_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*min.set']);
-
-    disp([f(sub_i).name]);
-    for mat_i = 1 : length(mat_list)
-        EEGset = B2X2_Filtering_v02(mat_list(mat_i), 1);
+if flag(2) == 1
+    disp('--------------------  FILTERING  --------------------')
+    for sub_i = 1 : length(f)
+        set_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*.set']);
+    
+        disp([f(sub_i).name]);
+        for mat_i = 1 : length(set_list)
+            EEGset = Filtering(set_list(mat_i), 'plot', 0, 'save', 1);
+        end
     end
 end
 
+%% Session Dividing
+if flag(3) == 1
+    disp('--------------------SESSION DIVIDING--------------------')
+    for sub_i = 1 : length(f)
+            set_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*_Filt.set']);
+    
+            disp([f(sub_i).name]);
+            for set_num = 1 : length(set_list)
+                EEGset = SessionDividing(set_list(set_num), 'save', 1);
+            end
+    end
+end
 
+%% ICA component calculation
+disp('--------------------  ICA Calculation  --------------------')
+for sub_iter = 1 : length(f)
+    set_list = dir([f(sub_iter).folder, '\', f(sub_iter).name, '\EEG\EEGset\*_Reref.set']);
+
+    disp([f(sub_iter).name]);
+    for set_num = 1 : length(set_list)
+        EEGset = B2X2_ICA_Component_Extraction(set_list(set_num), 1);
+    end
+end
