@@ -63,56 +63,7 @@ function [] = S020_vs_S100(band_names, g_names, N020, N100, S020, S100) %--norm_
             Hz_100 = getfield(S100, g_names{g_i}, band_names{band_i});
             plotting(g_names{g_i}, box_label, band_names{band_i}, Hz_20, Hz_100);
         end
-%         % frontal
-%         nexttile; 
-%         Hz_20 = getfield(S020, 'frontal', band_names{band_i});
-%         Hz_100 = getfield(S100, 'frontal', band_names{band_i});
-%         scatter([ones(length(Hz_20), 1), 2*ones(length(Hz_100),1)], [Hz_20', Hz_100']); hold on;
-%         h1 = boxplot([Hz_20'; Hz_100'], [ones(length(Hz_20),1); 2*ones(length(Hz_100),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, Hz_20, Hz_100);
-%         set(gca, 'fontsize', 20);
-%         title(['Frontal\_', band_names{band_i}, '\_normalized'], 'FontSize', 15); 
-%     
-%         % central
-%         nexttile; 
-%         Hz_20 = getfield(S020, 'central', band_names{band_i});
-%         Hz_100 = getfield(S100, 'central', band_names{band_i});
-%         scatter([ones(length(Hz_20), 1), 2*ones(length(Hz_100),1)], [Hz_20', Hz_100']); hold on;
-%         h1 = boxplot([Hz_20'; Hz_100'], [ones(length(Hz_20),1); 2*ones(length(Hz_100),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, Hz_20, Hz_100);
-%         set(gca, 'fontsize', 20);
-%         title(['Central\_', band_names{band_i}, '\_normalized'], 'FontSize', 15);
-%     
-%         % parietal
-%         nexttile; 
-%         Hz_20 = getfield(S020, 'parietal', band_names{band_i});
-%         Hz_100 = getfield(S100, 'parietal', band_names{band_i});
-%         scatter([ones(length(Hz_20), 1), 2*ones(length(Hz_100),1)], [Hz_20', Hz_100']); hold on;
-%         h1 = boxplot([Hz_20'; Hz_100'], [ones(length(Hz_20),1); 2*ones(length(Hz_100),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, Hz_20, Hz_100);
-%         set(gca, 'fontsize', 20);
-%         title(['Parietal\_', band_names{band_i}, '\_normalized'], 'FontSize', 15);
-%     
-%         % occipital
-%         nexttile; 
-%         Hz_20 = getfield(S020, 'occipital', band_names{band_i});
-%         Hz_100 = getfield(S100, 'occipital', band_names{band_i});
-%         scatter([ones(length(Hz_20), 1), 2*ones(length(Hz_100),1)], [Hz_20', Hz_100']); hold on;
-%         h1 = boxplot([Hz_20'; Hz_100'], [ones(length(Hz_20),1); 2*ones(length(Hz_100),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, Hz_20, Hz_100);
-%         set(gca, 'fontsize', 20);
-%         title(['Occipital\_', band_names{band_i}, '\_normalized'], 'FontSize', 15);
-%         
-%         % temporal
-%         nexttile;
-%         Hz_20 = getfield(S020, 'temporal', band_names{band_i});
-%         Hz_100 = getfield(S100, 'temporal', band_names{band_i});
-%         scatter([ones(length(Hz_20), 1), 2*ones(length(Hz_100),1)], [Hz_20', Hz_100']); hold on;
-%         h1 = boxplot([Hz_20'; Hz_100'], [ones(length(Hz_20),1); 2*ones(length(Hz_100),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, Hz_20, Hz_100);
-%         set(gca, 'fontsize', 20);    
-%         title(['Temporal\_', band_names{band_i}, '\_normalized'], 'FontSize', 15);
-    
+       
         t.Padding = 'compact';
     end
 end
@@ -130,52 +81,7 @@ function [] = N020_vs_N100(band_names, g_names, N020, N100, S020, S100) %--norm_
             Hz_100 = getfield(N100, g_names{g_i}, band_names{band_i});
             plotting(g_names{g_i}, box_label, band_names{band_i}, Hz_20, Hz_100);
         end
-%     
-%         % frontal
-%         nexttile; 
-%         Hz_20 = getfield(N020, 'frontal', band_names{band_i});
-%         Hz_100 = getfield(N100, 'frontal', band_names{band_i});
-%         h1 = boxplot([Hz_20'; Hz_100'], [ones(length(Hz_20),1); 2*ones(length(Hz_100),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, Hz_20, Hz_100);
-%         set(gca, 'fontsize', 20);
-%         title(['Frontal\_', band_names{band_i}, '\_normalized'], 'FontSize', 15); 
-%     
-%         % central
-%         nexttile; 
-%         Hz_20 = getfield(N020, 'central', band_names{band_i});
-%         Hz_100 = getfield(N100, 'central', band_names{band_i});
-%         h1 = boxplot([Hz_20'; Hz_100'], [ones(length(Hz_20),1); 2*ones(length(Hz_100),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, Hz_20, Hz_100);
-%         set(gca, 'fontsize', 20);
-%         title(['Central\_', band_names{band_i}, '\_normalized'], 'FontSize', 15);
-%     
-%         % parietal
-%         nexttile; 
-%         Hz_20 = getfield(N020, 'parietal', band_names{band_i});
-%         Hz_100 = getfield(N100, 'parietal', band_names{band_i});
-%         h1 = boxplot([Hz_20'; Hz_100'], [ones(length(Hz_20),1); 2*ones(length(Hz_100),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, Hz_20, Hz_100);
-%         set(gca, 'fontsize', 20);
-%         title(['Parietal\_', band_names{band_i}, '\_normalized'], 'FontSize', 15);
-%     
-%         % occipital
-%         nexttile; 
-%         Hz_20 = getfield(N020, 'occipital', band_names{band_i});
-%         Hz_100 = getfield(N100, 'occipital', band_names{band_i});
-%         h1 = boxplot([Hz_20'; Hz_100'], [ones(length(Hz_20),1); 2*ones(length(Hz_100),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, Hz_20, Hz_100);
-%         set(gca, 'fontsize', 20);
-%         title(['Occipital\_', band_names{band_i}, '\_normalized'], 'FontSize', 15);
-        
-%         % temporal
-%         nexttile;
-%         Hz_20 = getfield(N020, 'temporal', band_names{band_i});
-%         Hz_100 = getfield(N100, 'temporal', band_names{band_i});
-%         h1 = boxplot([Hz_20'; Hz_100'], [ones(length(Hz_20),1); 2*ones(length(Hz_100),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, Hz_20, Hz_100);
-%         set(gca, 'fontsize', 20);    
-%         title(['Temporal\_', band_names{band_i}, '\_normalized'], 'FontSize', 15);
-%     
+
         t.Padding = 'compact';
     end
 end
@@ -193,51 +99,6 @@ function [] = S020_vs_N020(band_names, g_names, N020, N100, S020, S100) %--norm_
             sym_biphasic = getfield(N020, g_names{g_i}, band_names{band_i});
             plotting(g_names{g_i}, box_label, band_names{band_i}, biphasic, sym_biphasic);
         end
-%     
-%         % frontal
-%         nexttile; 
-%         biphasic = getfield(S020, 'frontal', band_names{band_i});
-%         sym_biphasic = getfield(N020, 'frontal', band_names{band_i});
-%         h1 = boxplot([biphasic'; sym_biphasic'], [ones(length(biphasic),1); 2*ones(length(sym_biphasic),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, biphasic, sym_biphasic);
-%         set(gca, 'fontsize', 20);
-%         title(['Frontal\_', band_names{band_i}, '\_normalized'], 'FontSize', 15); 
-%     
-%         % central
-%         nexttile; 
-%         biphasic = getfield(S020, 'central', band_names{band_i});
-%         sym_biphasic = getfield(N020, 'central', band_names{band_i});
-%         h1 = boxplot([biphasic'; sym_biphasic'], [ones(length(biphasic),1); 2*ones(length(sym_biphasic),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, biphasic, sym_biphasic);
-%         set(gca, 'fontsize', 20);
-%         title(['Central\_', band_names{band_i}, '\_normalized'], 'FontSize', 15);
-%     
-%         % parietal
-%         nexttile; 
-%         biphasic = getfield(S020, 'parietal', band_names{band_i});
-%         sym_biphasic = getfield(N020, 'parietal', band_names{band_i});
-%         h1 = boxplot([biphasic'; sym_biphasic'], [ones(length(biphasic),1); 2*ones(length(sym_biphasic),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, biphasic, sym_biphasic);
-%         set(gca, 'fontsize', 20);
-%         title(['Parietal\_', band_names{band_i}, '\_normalized'], 'FontSize', 15);
-%     
-%         % occipital
-%         nexttile; 
-%         biphasic = getfield(S020, 'occipital', band_names{band_i});
-%         sym_biphasic = getfield(N020, 'occipital', band_names{band_i});
-%         h1 = boxplot([biphasic'; sym_biphasic'], [ones(length(biphasic),1); 2*ones(length(sym_biphasic),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, biphasic, sym_biphasic);
-%         set(gca, 'fontsize', 20);
-%         title(['Occipital\_', band_names{band_i}, '\_normalized'], 'FontSize', 15);
-%         
-%         % temporal
-%         nexttile;
-%         biphasic = getfield(S020, 'temporal', band_names{band_i});
-%         sym_biphasic = getfield(N020, 'temporal', band_names{band_i});
-%         h1 = boxplot([biphasic'; sym_biphasic'], [ones(length(biphasic),1); 2*ones(length(sym_biphasic),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, biphasic, sym_biphasic);
-%         set(gca, 'fontsize', 20);    
-%         title(['Temporal\_', band_names{band_i}, '\_normalized'], 'FontSize', 15);
     
         t.Padding = 'compact';
     end
@@ -256,51 +117,7 @@ function [] = S100_vs_N100(band_names, g_names, N020, N100, S020, S100) %--norm_
             sym_biphasic = getfield(N100, g_names{g_i}, band_names{band_i});
             plotting(g_names{g_i}, box_label, band_names{band_i}, biphasic, sym_biphasic);
         end
-%         % frontal
-%         nexttile; 
-%         biphasic = getfield(S100, 'frontal', band_names{band_i});
-%         sym_biphasic = getfield(N100, 'frontal', band_names{band_i});
-%         h1 = boxplot([biphasic'; sym_biphasic'], [ones(length(biphasic),1); 2*ones(length(sym_biphasic),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, biphasic, sym_biphasic);
-%         set(gca, 'fontsize', 20);
-%         title(['Frontal\_', band_names{band_i}, '\_normalized'], 'FontSize', 15); 
-%     
-%         % central
-%         nexttile; 
-%         biphasic = getfield(S100, 'central', band_names{band_i});
-%         sym_biphasic = getfield(N100, 'central', band_names{band_i});
-%         h1 = boxplot([biphasic'; sym_biphasic'], [ones(length(biphasic),1); 2*ones(length(sym_biphasic),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, biphasic, sym_biphasic);
-%         set(gca, 'fontsize', 20);
-%         title(['Central\_', band_names{band_i}, '\_normalized'], 'FontSize', 15);
-%     
-%         % parietal
-%         nexttile; 
-%         biphasic = getfield(S100, 'parietal', band_names{band_i});
-%         sym_biphasic = getfield(N100, 'parietal', band_names{band_i});
-%         h1 = boxplot([biphasic'; sym_biphasic'], [ones(length(biphasic),1); 2*ones(length(sym_biphasic),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, biphasic, sym_biphasic);
-%         set(gca, 'fontsize', 20);
-%         title(['Parietal\_', band_names{band_i}, '\_normalized'], 'FontSize', 15);
-%     
-%         % occipital
-%         nexttile; 
-%         biphasic = getfield(S100, 'occipital', band_names{band_i});
-%         sym_biphasic = getfield(N100, 'occipital', band_names{band_i});
-%         h1 = boxplot([biphasic'; sym_biphasic'], [ones(length(biphasic),1); 2*ones(length(sym_biphasic),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, biphasic, sym_biphasic);
-%         set(gca, 'fontsize', 20);
-%         title(['Occipital\_', band_names{band_i}, '\_normalized'], 'FontSize', 15);
-%         
-%         % temporal
-%         nexttile;
-%         biphasic = getfield(S100, 'temporal', band_names{band_i});
-%         sym_biphasic = getfield(N100, 'temporal', band_names{band_i});
-%         h1 = boxplot([biphasic'; sym_biphasic'], [ones(length(biphasic),1); 2*ones(length(sym_biphasic),1)], 'Labels', box_label); hold on;
-%         boxplot_modification(h1, biphasic, sym_biphasic);
-%         set(gca, 'fontsize', 20);    
-%         title(['Temporal\_', band_names{band_i}, '\_normalized'], 'FontSize', 15);
-    
+
         t.Padding = 'compact';
     end
 end

@@ -29,6 +29,9 @@ band_names = {'gamma', 'beta', 'alpha', 'theta', 'delta'};
 g_names = {'frontal', 'central', 'parietal', 'occipital', 'temporal'};
 stim_th = 6;
 
+Symmetric_20Hz();
+Symmetric_20Hz();
+
 %% 1. Symmetric biphasic 20Hz
 for band_i = 1 : length(band_names)    
     figure;
@@ -206,4 +209,42 @@ for band_i = 1 : length(band_names)
     title(['Temporal\_', band_names{band_i}, '\_norm'], 'FontSize', 15);
 
     t.Padding = 'compact';
+end
+
+function [] = plotting(g_name, box_label, band_name, data1, data2)
+scatter([ones(length(data1), 1), 2*ones(length(data2),1)], [data1', data2']); hold on;
+h1 = boxplot([data1'; data2'], [ones(length(data1),1); 2*ones(length(data2),1)], 'Labels', box_label); hold on;
+% boxplot_modification(h1, data1, data2);
+set(gca, 'fontsize', 20);
+title([g_name, '\_', band_name, '\_normalized'], 'FontSize', 15); 
+end
+
+function [q10, q25, q75, q90] = getQuantile(data)
+q = quantile(data, [0.1 0.25 0.75 0.9]);
+q10=q(1); q25=q(2); q75=q(3); q90=q(4);
+end
+
+function [] = boxplot_modification(h, data1, data2)
+        % boxplot modification
+        % modify the figure properties (set the YData property)  
+        % h(5,1) correspond the blue box  
+        % h(1,1) correspond the upper whisker  
+        % h(2,1) correspond the lower whisker
+        [q10, q25_1, q75_1, q90] = getQuantile(data1);
+        set(h(5,1), 'YData', [q10 q90 q90 q10 q10]);% blue box  
+        upWhisker = get(h(1,1), 'YData');  
+        set(h(1,1), 'YData', [q90 upWhisker(2)])   
+        dwWhisker = get(h(2,1), 'YData');  
+        set(h(2,1), 'YData', [dwWhisker(1) q10]) 
+    
+        [q10, q25_2, q75_2, q90] = getQuantile(data2);
+        set(h(5,2), 'YData', [q10 q90 q90 q10 q10]);
+        upWhisker = get(h(1,1), 'YData');  
+        set(h(1,2), 'YData', [q90 upWhisker(2)])   
+        dwWhisker = get(h(2,1), 'YData');  
+        set(h(2,2), 'YData', [dwWhisker(1) q10]) 
+
+%         ylim_low = (q25_2 > q25_1) * q25_1 + (q25_2 <= q25_1) * q25_2;
+%         ylim_high = (q75_2 > q75_1) * q75_2 + (q75_2 <= q75_1) * q75_1;
+%         ylim([ylim_low ylim_high]);
 end
