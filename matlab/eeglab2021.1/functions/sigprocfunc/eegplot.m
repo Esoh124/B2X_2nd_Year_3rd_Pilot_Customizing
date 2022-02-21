@@ -315,7 +315,7 @@ if ~ischar(data) % If NOT a 'noui' call or a callback from uicontrols
    try, g.srate; 		    catch, g.srate		= 256; 	end
    try, g.spacing; 			catch, g.spacing	= 0; 	end
    try, g.eloc_file; 		catch, g.eloc_file	= 0; 	end; % 0 mean numbered
-   try, g.winlength; 		catch, g.winlength	= 5; 	end; % Number of seconds of EEG displayed
+   try, g.winlength; 		catch, g.winlength	= 15; 	end; % Number of seconds of EEG displayed
    try, g.position; 	    catch, g.position	= ORIGINAL_POSITION; 	end
    try, g.title; 		    catch, g.title		= ['Scroll activity -- eegplot()']; 	end
    try, g.plottitle; 		catch, g.plottitle	= ''; 	end
@@ -331,7 +331,7 @@ if ~ischar(data) % If NOT a 'noui' call or a callback from uicontrols
    try, g.limits;		    catch, g.limits	    = [0 1000*(size(data,2)-1)/g.srate]; end
    try, g.freqs;            catch, g.freqs	    = []; end;  % Ramon
    try, g.freqlimits;	    catch, g.freqlimits	= []; end
-   try, g.dispchans; 		catch, g.dispchans  = size(data,1); end
+   try, g.dispchans; 		catch, g.dispchans  = 5; end
    try, g.wincolor; 		catch, g.wincolor   = [ 0.7 1 0.9]; end
    try, g.butlabel; 		catch, g.butlabel   = 'REJECT'; end
    try, g.colmodif; 		catch, g.colmodif   = { g.wincolor }; end

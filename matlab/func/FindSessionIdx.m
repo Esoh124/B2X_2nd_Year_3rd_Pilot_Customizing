@@ -6,12 +6,12 @@ function [base_i, stim_i, reco_i] = FindSessionIdx(len_eeg, fs)
    
     base2 = 6*60; % end time [sec]
     base_i(1)=1; % start index 
-    [~, base_i(2)] = find(t==base2); % end index
+    [~, base_i(2)] = min(abs(t-base2)); % end index
     base_i = base_i(1):base_i(2); % indices of session base
     
     stim_i(1) = base_i(end)+1; % start index
     stim2 = 60*(6+6); % end time [sec]
-    [~, stim_i(2)] = find(t==stim2); % end index
+    [~, stim_i(2)] = min(abs(t-stim2)); % end index
     stim_i = stim_i(1):stim_i(2); % indices of session base
     
     reco_i(1) = stim_i(end)+fs*5; % start index

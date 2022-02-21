@@ -63,13 +63,18 @@ function [] = plotEOG(varargin)
 
     if session == 'base'
         session_idx = base_i;
+        x_range = [0 15]; % 0s ~ 15s
+    elseif session == 'stim'
+        session_idx = stim_i;
+        x_range = [0 15]; % 360s ~ 375s
     elseif session == 'reco'
         session_idx = reco_i;
+        x_range = [0 15]; % 720s ~ 740s
     end
 
     figure;
-    ax1 = subplot(2,1,1); plot(t(session_idx), vertical_eog(session_idx)); xlim([0 15]); title('Vertical EOG', 'FontSize', 15);
-    ax2 = subplot(2,1,2); plot(t(session_idx), horizontal_eog(session_idx)); xlim([0 15]); title('Horizontal EOG', 'FontSize', 15);
+    ax1 = subplot(2,1,1); plot(t(session_idx)-t(session_idx(1)), vertical_eog(session_idx)); xlim(x_range); title('Vertical EOG', 'FontSize', 15);
+    ax2 = subplot(2,1,2); plot(t(session_idx)-t(session_idx(1)), horizontal_eog(session_idx)); xlim(x_range); title('Horizontal EOG', 'FontSize', 15);
     linkaxes([ax1, ax2], 'x');
 
 end

@@ -13,13 +13,13 @@
 addpath 'E:\B2X\2차년도\03_pilot\CODE\matlab\eeglab2021.1'
 addpath 'E:\B2X\2차년도\03_pilot\CODE\matlab\func'
 addpath 'E:\B2X\2차년도\03_pilot\CODE\matlab\locs'
-eeglab; close all; clear; clc;
+% eeglab; close all; clear; clc;
 
 % --Data preparation
 data_path = 'E:\B2X\2차년도\03_pilot\subject_data';
 % Choose the subjects who are goning to be analyzed
-choose_sub = [1:20];
-% choose_sub = 1;
+% choose_sub = [1:20];
+choose_sub = 15; 
 f = dir(data_path);
 f = f(3:sum([f.isdir]));
 if sum(choose_sub) > 0
@@ -33,8 +33,10 @@ end
 disp(' ');
 
 %% set the flags for the functions below whether run or not
-%       mat2set    Filtering    SessionDividing     ICA_component_calculation    
-flag = [0           0           0                   0];
+%       mat2set    Filtering    SessionDividing     ICA_component_calculation   Epoching
+%       CalPSD
+flag = [0           0           0                   0                           1 ...
+        1];
 %% mat2set
 warning('off')
 if flag(1) == 1
@@ -96,11 +98,50 @@ if flag(4) == 1
     end
 end
 
-for sub_i = 1 : length(f)
-    set_list= dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*_ICA.set']);
+%% Manually Name Change
+% for sub_i = 1 : length(f)
+%     set_list= dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*_ICA.set']);
+%     
+%     disp([f(sub_i).name]);
+%     for set_num = 1 : length(set_list)
+%         ManualNameChange(set_list(set_num));
+%     end
+% end
+
+%% Epoching
+if flag(5) == 1
+    disp('--------------------------EPOCHING------------------------')
+    for sub_num = 1 : length(f)
+        disp([f(sub_num).name]);
     
-    disp([f(sub_i).name]);
-    for set_num = 1 : length(set_list)
-        ManualNameChange(set_list(set_num));
+        set_list = dir([f(sub_num).folder, '\', f(sub_num).name, '\EEG\EEGset\*_rmICA.set']);
+               
+        for set_num = 1 : length(set_list)
+            EEGset = Epoching(set_list(set_num), 'save', 1);
+        end
     end
 end
+
+%% Spectral Analysis
+% artifact를 포함하는 epoch을 제외한 나머지 epoch들을 이용
+% 각 epoch에 대한 PSD, band power(gamma, beta, alpha, theta, delta)를 구하여
+% EEGset에 저장
+
+if flag(6) == 1
+    disp('--------------------------SPECTRAL ANALYSIS------------------------')
+    for sub_num = 1 : length(f)
+        disp([f(sub_num).name]);
+        set_list = dir([f(sub_num).folder, '\', f(sub_num).name, '\EEG\EEGset\*_epoch.set']);
+        for set_num = 1 : length(set_list)
+            EEGset = CalPSD(set_list(set_num), 'save', 1);
+        end
+    end
+end
+
+%% Show Powers
+
+% disp('--------------------------SHOW POWERS------------------------')
+% [powers, powers_ratio] = B2X2_EEG_ShowPowers_v04(f, 1);
+% [norm_powers, norm_powers_ratio] = B2X2_EEG_ShowNormPowers_v03(f, 1);
+
+

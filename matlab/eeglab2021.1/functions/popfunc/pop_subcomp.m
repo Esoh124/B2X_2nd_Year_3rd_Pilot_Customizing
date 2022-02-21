@@ -201,7 +201,7 @@ if nargin < 2 || plotag ~= 0
     end % switch
 end
 EEG.data(EEG.icachansind,:,:) = compproj;
-EEG.setname = [ EEG.setname ' pruned with ICA'];
+EEG.setname = [ EEG.setname '_rmICA'];
 EEG.icaact  = [];
 goodinds    = setdiff_bc(1:size(EEG.icaweights,1), components);
 EEG.icawinv     = EEG.icawinv(:,goodinds);
