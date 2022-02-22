@@ -12,7 +12,7 @@ load("norm_S100.mat");
 band_names = {'gamma', 'beta', 'alpha', 'theta', 'delta'};
 g_names = {'frontal', 'central', 'parietal', 'occipital', 'temporal'};
 
-data1 = S100;
+data1 = S020;
 data2 = N100;
 for band_i = 1 : length(band_names)
 

@@ -61,7 +61,7 @@ function [] = S020_vs_S100(band_names, g_names, N020, N100, S020, S100) %--norm_
             nexttile; 
             Hz_20 = getfield(S020, g_names{g_i}, band_names{band_i});
             Hz_100 = getfield(S100, g_names{g_i}, band_names{band_i});
-            plotting(g_names{g_i}, box_label, band_names{band_i}, Hz_20, Hz_100);
+            plotting(g_names{g_i}, box_label, band_names{band_i}, Hz_20, Hz_100, 'norm', 1);
         end
        
         t.Padding = 'compact';
@@ -79,7 +79,7 @@ function [] = N020_vs_N100(band_names, g_names, N020, N100, S020, S100) %--norm_
             nexttile; 
             Hz_20 = getfield(N020, g_names{g_i}, band_names{band_i});
             Hz_100 = getfield(N100, g_names{g_i}, band_names{band_i});
-            plotting(g_names{g_i}, box_label, band_names{band_i}, Hz_20, Hz_100);
+            plotting(g_names{g_i}, box_label, band_names{band_i}, Hz_20, Hz_100, 'norm', 1);
         end
 
         t.Padding = 'compact';
@@ -90,14 +90,14 @@ function [] = S020_vs_N020(band_names, g_names, N020, N100, S020, S100) %--norm_
     %     2.1 S020 vs N020
     for band_i = 1 : length(band_names)
         figure;
-        t = tiledlayout(1,5); sgtitle('Biphasic vs Symmetric Biphasic for 20Hz as base2reco ratio', 'FontSize', 20);
-        box_label = {'biphasic', 'sym_biphasic'};
+        t = tiledlayout(1,5); sgtitle('Symmetric Biphasic vs Biphasic for 20Hz as base2reco ratio', 'FontSize', 20);
+        box_label = {'sym_biphasic', 'biphasic'};
 
         for g_i = 1 : length(g_names)
             nexttile; 
             biphasic = getfield(S020, g_names{g_i}, band_names{band_i});
             sym_biphasic = getfield(N020, g_names{g_i}, band_names{band_i});
-            plotting(g_names{g_i}, box_label, band_names{band_i}, biphasic, sym_biphasic);
+            plotting(g_names{g_i}, box_label, band_names{band_i}, biphasic, sym_biphasic, 'norm', 1);
         end
     
         t.Padding = 'compact';
@@ -108,26 +108,18 @@ function [] = S100_vs_N100(band_names, g_names, N020, N100, S020, S100) %--norm_
     %     2.2 S100 vs N100
     for band_i = 1 : length(band_names)
         figure;
-        t = tiledlayout(1,5); sgtitle('Biphasic vs Symmetric Biphasic for 100Hz as base2reco ratio', 'FontSize', 20);
-        box_label = {'biphasic', 'sym_biphasic'};
+        t = tiledlayout(1,5); sgtitle('Symmetric Biphasic vs Biphasic for 100Hz as base2reco ratio', 'FontSize', 20);
+        box_label = {'sym_biphasic', 'biphasic'};
     
         for g_i = 1 : length(g_names)
             nexttile; 
             biphasic = getfield(S100, g_names{g_i}, band_names{band_i});
             sym_biphasic = getfield(N100, g_names{g_i}, band_names{band_i});
-            plotting(g_names{g_i}, box_label, band_names{band_i}, biphasic, sym_biphasic);
+            plotting(g_names{g_i}, box_label, band_names{band_i}, biphasic, sym_biphasic, 'norm', 1);
         end
 
         t.Padding = 'compact';
     end
-end
-
-function [] = plotting(g_name, box_label, band_name, data1, data2)
-scatter([ones(length(data1), 1), 2*ones(length(data2),1)], [data1', data2']); hold on;
-h1 = boxplot([data1'; data2'], [ones(length(data1),1); 2*ones(length(data2),1)], 'Labels', box_label); hold on;
-% boxplot_modification(h1, data1, data2);
-set(gca, 'fontsize', 20);
-title([g_name, '\_', band_name, '\_normalized'], 'FontSize', 15); 
 end
 
 function [q10, q25, q75, q90] = getQuantile(data)

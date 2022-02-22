@@ -29,194 +29,43 @@ band_names = {'gamma', 'beta', 'alpha', 'theta', 'delta'};
 g_names = {'frontal', 'central', 'parietal', 'occipital', 'temporal'};
 stim_th = 6;
 
-Symmetric_20Hz();
-Symmetric_20Hz();
+Symmetric_20Hz(band_names, g_names, N020, N100, S020, S100);
+Biphasic_20Hz(band_names, g_names, N020, N100, S020, S100);
 
-%% 1. Symmetric biphasic 20Hz
-for band_i = 1 : length(band_names)    
-    figure;
-    t = tiledlayout(1,5); sgtitle('20Hz of Symmetric Biphasic', 'FontSize', 20);
-
-    % frontal
-    nexttile; 
-    base = getfield(S020, 'frontal', 'base', band_names{band_i});
-    reco = getfield(S020, 'frontal', 'reco', band_names{band_i});
-    if band_i == stim_th
-        % delta 영역은 20Hz 자극에 대한 잡음이 끼지 않음 
-        % --> delta를 분석할 때는 stimulation 구간 포함
-        stim = getfield(S020, 'frontal', 'stim', band_names{band_i});
-        box_input = [base', stim', reco'];
-        box_label = {'Baseline', 'Stimulation', 'Recovery'};
-    else
-        box_input = [base', reco'];
+function [] = Symmetric_20Hz(band_names, g_names, N020, N100, S020, S100)
+    % 1. Symmetric biphasic 20Hz
+    for band_i = 1 : length(band_names)    
+        figure;
+        t = tiledlayout(1,5); sgtitle('20Hz of Symmetric Biphasic', 'FontSize', 20);
         box_label = {'Baseline', 'Recovery'};
-    end
-    boxplot(box_input, 'Labels', box_label);
-    set(gca, 'fontsize', 20);
-    title(['Frontal\_', band_names{band_i}, '\_norm'], 'FontSize', 15); 
-
-    % central
-    nexttile; 
-    base = getfield(S020, 'central', 'base', band_names{band_i});
-    reco = getfield(S020, 'central', 'reco', band_names{band_i});
-    if band_i == stim_th
-        stim = getfield(S020, 'central', 'stim', band_names{band_i});
-        box_input = [base', stim', reco'];
-        box_label = {'Baseline', 'Stimulation', 'Recovery'};
-    else
-        box_input = [base', reco'];
-        box_label = {'Baseline', 'Recovery'};
-    end
-    boxplot(box_input, 'Labels', box_label);
-    set(gca, 'fontsize', 20);
-    title(['Central\_', band_names{band_i}, '\_norm'], 'FontSize', 15);
-
-    % parietal
-    nexttile; 
-    base = getfield(S020, 'parietal', 'base', band_names{band_i});
-    reco = getfield(S020, 'parietal', 'reco', band_names{band_i});
-    if band_i == stim_th
-        stim = getfield(S020, 'parietal', 'stim', band_names{band_i});
-        box_input = [base', stim', reco'];
-        box_label = {'Baseline', 'Stimulation', 'Recovery'};
-    else
-        box_input = [base', reco'];
-        box_label = {'Baseline', 'Recovery'};
-    end
-    boxplot(box_input, 'Labels', box_label);
-    set(gca, 'fontsize', 20);
-    title(['Parietal\_', band_names{band_i}, '\_norm'], 'FontSize', 15);
-
-    % occipital
-    nexttile; 
-    base = getfield(S020, 'occipital', 'base', band_names{band_i});
-    reco = getfield(S020, 'occipital', 'reco', band_names{band_i});
-    if band_i == stim_th
-        stim = getfield(S020, 'occipital', 'stim', band_names{band_i});
-        box_input = [base', stim', reco'];
-        box_label = {'Baseline', 'Stimulation', 'Recovery'};
-    else
-        box_input = [base', reco'];
-        box_label = {'Baseline', 'Recovery'};
-    end
-    boxplot(box_input, 'Labels', box_label);
-    set(gca, 'fontsize', 20);
-    title(['Occipital\_', band_names{band_i}, '\_norm'], 'FontSize', 15);
     
-    % temporal
-    nexttile;
-    base = getfield(S020, 'temporal', 'base', band_names{band_i});
-    reco = getfield(S020, 'temporal', 'reco', band_names{band_i});
-    if band_i == stim_th
-        stim = getfield(S020, 'temporal', 'stim', band_names{band_i});
-        box_input = [base', stim', reco'];
-        box_label = {'Baseline', 'Stimulation', 'Recovery'};
-    else
-        box_input = [base', reco'];
-        box_label = {'Baseline', 'Recovery'};
+        for g_i = 1 : length(g_names)
+            nexttile; 
+            base = getfield(S020, g_names{g_i}, 'base', band_names{band_i});
+            reco = getfield(S020, g_names{g_i}, 'reco', band_names{band_i});
+            plotting(g_names{g_i}, box_label, band_names{band_i}, base, reco, 'norm', 1);
+        end
+    
+        t.Padding = 'compact';
     end
-    boxplot(box_input, 'Labels', box_label);
-    set(gca, 'fontsize', 20);    
-    title(['Temporal\_', band_names{band_i}, '\_norm'], 'FontSize', 15);
-
-    t.Padding = 'compact';
 end
 
-
-%% 2. Biphasic 20Hz
-for band_i = 1 : length(band_names)    
-    figure;
-    t = tiledlayout(1,5); sgtitle('20Hz of Biphasic', 'FontSize', 20);
-
-    % frontal
-    nexttile; 
-    base = getfield(N020, 'frontal', 'base', band_names{band_i});
-    reco = getfield(N020, 'frontal', 'reco', band_names{band_i});
-    if band_i == stim_th
-        stim = getfield(N020, 'frontal', 'stim', band_names{band_i});
-        box_input = [base', stim', reco'];
-        box_label = {'Baseline', 'Stimulation', 'Recovery'};
-    else
-        box_input = [base', reco'];
+function [] = Biphasic_20Hz(band_names, g_names, N020, N100, S020, S100)
+    % 2. Biphasic 20Hz
+    for band_i = 1 : length(band_names)    
+        figure;
+        t = tiledlayout(1,5); sgtitle('20Hz of Biphasic', 'FontSize', 20);
         box_label = {'Baseline', 'Recovery'};
-    end
-    boxplot(box_input, 'Labels', box_label);
-    set(gca, 'fontsize', 20);
-    title(['Frontal\_', band_names{band_i}, '\_norm'], 'FontSize', 15); 
-
-    % central
-    nexttile; 
-    base = getfield(N020, 'central', 'base', band_names{band_i});
-    reco = getfield(N020, 'central', 'reco', band_names{band_i});
-    if band_i == stim_th
-        stim = getfield(N020, 'central', 'stim', band_names{band_i});
-        box_input = [base', stim', reco'];
-        box_label = {'Baseline', 'Stimulation', 'Recovery'};
-    else
-        box_input = [base', reco'];
-        box_label = {'Baseline', 'Recovery'};
-    end
-    boxplot(box_input, 'Labels', box_label);
-    set(gca, 'fontsize', 20);
-    title(['Central\_', band_names{band_i}, '\_norm'], 'FontSize', 15);
-
-    % parietal
-    nexttile; 
-    base = getfield(N020, 'parietal', 'base', band_names{band_i});
-    reco = getfield(N020, 'parietal', 'reco', band_names{band_i});
-    if band_i == stim_th
-        stim = getfield(N020, 'parietal', 'stim', band_names{band_i});
-        box_input = [base', stim', reco'];
-        box_label = {'Baseline', 'Stimulation', 'Recovery'};
-    else
-        box_input = [base', reco'];
-        box_label = {'Baseline', 'Recovery'};
-    end
-    boxplot(box_input, 'Labels', box_label);
-    set(gca, 'fontsize', 20);
-    title(['Parietal\_', band_names{band_i}, '\_norm'], 'FontSize', 15);
-
-    % occipital
-    nexttile; 
-    base = getfield(N020, 'occipital', 'base', band_names{band_i});
-    reco = getfield(N020, 'occipital', 'reco', band_names{band_i});
-    if band_i == stim_th
-        stim = getfield(N020, 'occipital', 'stim', band_names{band_i});
-        box_input = [base', stim', reco'];
-        box_label = {'Baseline', 'Stimulation', 'Recovery'};
-    else
-        box_input = [base', reco'];
-        box_label = {'Baseline', 'Recovery'};
-    end
-    boxplot(box_input, 'Labels', box_label);
-    set(gca, 'fontsize', 20);
-    title(['Occipital\_', band_names{band_i}, '\_norm'], 'FontSize', 15);
     
-    % temporal
-    nexttile;
-    base = getfield(N020, 'temporal', 'base', band_names{band_i});
-    reco = getfield(N020, 'temporal', 'reco', band_names{band_i});
-    if band_i == stim_th
-        stim = getfield(N020, 'temporal', 'stim', band_names{band_i});
-        box_input = [base', stim', reco'];
-        box_label = {'Baseline', 'Stimulation', 'Recovery'};
-    else
-        box_input = [base', reco'];
-        box_label = {'Baseline', 'Recovery'};
+        for g_i = 1 : length(g_names)
+            nexttile; 
+            base = getfield(N020, g_names{g_i}, 'base', band_names{band_i});
+            reco = getfield(N020, g_names{g_i}, 'reco', band_names{band_i});
+            plotting(g_names{g_i}, box_label, band_names{band_i}, base, reco, 'norm', 1);
+        end
+    
+        t.Padding = 'compact';
     end
-    boxplot(box_input, 'Labels', box_label);
-    set(gca, 'fontsize', 20);    
-    title(['Temporal\_', band_names{band_i}, '\_norm'], 'FontSize', 15);
-
-    t.Padding = 'compact';
-end
-
-function [] = plotting(g_name, box_label, band_name, data1, data2)
-scatter([ones(length(data1), 1), 2*ones(length(data2),1)], [data1', data2']); hold on;
-h1 = boxplot([data1'; data2'], [ones(length(data1),1); 2*ones(length(data2),1)], 'Labels', box_label); hold on;
-% boxplot_modification(h1, data1, data2);
-set(gca, 'fontsize', 20);
-title([g_name, '\_', band_name, '\_normalized'], 'FontSize', 15); 
 end
 
 function [q10, q25, q75, q90] = getQuantile(data)
