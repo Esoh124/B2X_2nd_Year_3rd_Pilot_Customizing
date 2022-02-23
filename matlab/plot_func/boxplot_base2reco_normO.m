@@ -42,8 +42,8 @@ band_names = {'gamma', 'beta', 'alpha', 'theta', 'delta'};
 g_names = {'frontal', 'central', 'parietal', 'occipital', 'temporal'};
 
 % 20Hz vs 100Hz
-S020_vs_S100(band_names, g_names, N020, N100, S020, S100);
-N020_vs_N100(band_names, g_names, N020, N100, S020, S100);
+% S020_vs_S100(band_names, g_names, N020, N100, S020, S100);
+% N020_vs_N100(band_names, g_names, N020, N100, S020, S100);
 
 % biphasic vs symmetric biphasic
 S020_vs_N020(band_names, g_names, N020, N100, S020, S100);
@@ -95,9 +95,9 @@ function [] = S020_vs_N020(band_names, g_names, N020, N100, S020, S100) %--norm_
 
         for g_i = 1 : length(g_names)
             nexttile; 
-            biphasic = getfield(S020, g_names{g_i}, band_names{band_i});
-            sym_biphasic = getfield(N020, g_names{g_i}, band_names{band_i});
-            plotting(g_names{g_i}, box_label, band_names{band_i}, biphasic, sym_biphasic, 'norm', 1);
+            sym_biphasic = getfield(S020, g_names{g_i}, band_names{band_i});
+            biphasic = getfield(N020, g_names{g_i}, band_names{band_i});
+            plotting(g_names{g_i}, box_label, band_names{band_i}, sym_biphasic, biphasic, 'norm', 1);
         end
     
         t.Padding = 'compact';
@@ -113,9 +113,9 @@ function [] = S100_vs_N100(band_names, g_names, N020, N100, S020, S100) %--norm_
     
         for g_i = 1 : length(g_names)
             nexttile; 
-            biphasic = getfield(S100, g_names{g_i}, band_names{band_i});
-            sym_biphasic = getfield(N100, g_names{g_i}, band_names{band_i});
-            plotting(g_names{g_i}, box_label, band_names{band_i}, biphasic, sym_biphasic, 'norm', 1);
+            sym_biphasic = getfield(S100, g_names{g_i}, band_names{band_i});
+            biphasic = getfield(N100, g_names{g_i}, band_names{band_i});
+            plotting(g_names{g_i}, box_label, band_names{band_i}, sym_biphasic, biphasic, 'norm', 1);
         end
 
         t.Padding = 'compact';
