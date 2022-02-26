@@ -1,0 +1,79 @@
+% extract epoch_data
+
+% 100Hz 자극은 모든 주파수 영역에 대해서 분석
+% 20Hz 자극은 delta 영역에 대해서만 분석
+
+
+%% Default Setting
+close all; clear; clc;
+% add EEGLAB path
+addpath 'D:\B2X\2차년도\03_pilot\CODE\matlab\eeglab2021.1'
+
+% Choose subjects who are going to be analyzed
+subjcet_path = 'D:\B2X\2차년도\03_pilot\subject_data';
+choose_sub = 1; 
+f = dir(subjcet_path);
+f = f(3:sum([f.isdir]));
+if sum(choose_sub) > 0
+    f = f(choose_sub);
+end
+
+fprintf('Selected Subjects: ');
+for mat_i = 1 : length(f)
+    fprintf('%s ', f(mat_i).name);
+end
+disp(' ');
+
+% naming initiation
+stim_param_names =  {'s0', 'N020', 'N100', 'S020', 'S100'};
+band_names = {'gamma', 'beta', 'alpha', 'theta', 'delta'};
+
+g_names = {'frontal', 'central', 'parietal', 'occipital', 'temporal'};
+g_names_Frontal = {'Fp1', 'Fpz', 'Fp2', 'F7', 'F3', 'Fz', 'F4', 'F8', 'FC5', 'FC1', 'FC2', 'FC6'};
+g_names_Central = {'C3', 'Cz', 'C4'};
+g_names_Parietal = {'CP5', 'CP1', 'CP2', 'CP6', 'P7', 'P3', 'Pz', 'P4', 'P8'};
+g_names_Occipital = {'POz', 'O1', 'Oz', 'O2'};
+g_names_Temporal = {'T7', 'T8'};
+g_ch_names = {g_names_Frontal, g_names_Central, g_names_Parietal, g_names_Occipital, g_names_Temporal};
+
+%% Extract the PSD of each epoch
+
+% form of output
+% s0.KDH_01.frontal.F7.gamma 
+% s0.KDH_01.frontal.FC5
+
+% output struct initiation
+s0 = struct();
+N020 = struct();
+N100 = struct();
+S020 = struct();
+S100 = struct();
+
+
+for sub_i = 1 : length(f)
+    EEGset_path = [f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset'];
+    for stim_param_i = 1 : length(stim_param_names)
+        % get dir of .set files based on stim_param_i
+        base_dir = dir([EEGset_path, '\', stim_param_names{stim_param_i}, '_Filt_base*_PSD.set']);
+        stim_dir = dir([EEGset_path, '\', stim_param_names{stim_param_i}, '_Filt_stim*_PSD.set']);
+        reco_dir = dir([EEGset_path, '\', stim_param_names{stim_param_i}, '_Filt_reco*_PSD.set']);
+
+        set_base = pop_loadset([base_dir.folder, '\', base_dir.name]);
+        set_stim = pop_loadset([stim_dir.folder, '\', stim_dir.name]);
+        set_reco = pop_loadset([reco_dir.folder, '\', reco_dir.name]);
+        
+        for g_i = 1 : length(g_names)
+            temp_g_chs = g_ch_names{g_i};
+            for g_ch_i = 1 : length(temp_g_chs)
+                for b_i = 1 : length(band_names)
+                    temp_ch_base = getfield(set_base, 'SpectralAnalysis', temp_g_chs{g_ch_i}, 'epoch_data', band_names{b_i});
+                    temp_ch_stim = getfield(set_base, 'SpectralAnalysis', temp_g_chs{g_ch_i}, 'epoch_data', band_names{b_i});
+                    temp_ch_reco = getfield(set_base, 'SpectralAnalysis', temp_g_chs{g_ch_i}, 'epoch_data', band_names{b_i});
+                    
+                end
+            end
+        end
+
+    end
+end
+

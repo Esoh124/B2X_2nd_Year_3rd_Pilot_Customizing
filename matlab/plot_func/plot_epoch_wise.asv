@@ -1,0 +1,52 @@
+% epoch-wise plotting
+
+% frontal: 12 --> subplot(3,4)
+% central: 3 --> subplot(1,3)
+% parietal: 9 --> subplot(3,3)
+% occipital: 4 --> subplot(2,2)
+% temporal: 2 --> subplot(1,2)
+
+% gamma
+figure;
+band = 'gamma';
+band_s0 = getfield(s0, 'KDH_01', 'frontal', 'Fp1', band);
+band_S100 = getfield(S100, 'KDH_01', 'frontal', 'Fp1', band);
+figure; 
+subplot(2,1,1); plot(band_s0); hold on; 
+title('Sham'); xlabel('epoch (base~stim~reco)'); ylabel([band, ' power']); 
+subplot(2,1,2); plot(band_S100); hold on;
+title('100Hz Symmetric'); xlabel('epoch (base~stim~reco)'); ylabel([band, ' power']); 
+
+% beta
+figure;
+band = 'beta';
+band_s0 = getfield(s0, 'KDH_01', 'frontal', 'Fp1', band);
+band_S100 = getfield(S100, 'KDH_01', 'frontal', 'Fp1', band);
+figure; 
+subplot(2,1,1); plot(band_s0); hold on; 
+title('Sham'); xlabel('epoch (base~stim~reco)'); ylabel([band, ' power']); 
+subplot(2,1,2); plot(band_S100); hold on;
+title('100Hz Symmetric'); xlabel('epoch (base~stim~reco)'); ylabel([band, ' power']); 
+
+% alpha
+figure;
+band = 'alpha';
+band_s0 = getfield(s0, 'KDH_01', 'frontal', 'Fp1', band);
+band_S100 = getfield(S100, 'KDH_01', 'frontal', 'Fp1', band);
+figure; 
+subplot(2,1,1); plot(band_s0); hold on; 
+title('Sham'); xlabel('epoch (base~stim~reco)'); ylabel([band, ' power']); 
+subplot(2,1,2); plot(band_S100); hold on;
+title('100Hz Symmetric'); xlabel('epoch (base~stim~reco)'); ylabel([band, ' power']); 
+
+% theta
+figure;
+band = 'theta';
+band_s0 = getfield(s0, 'KDH_01', 'frontal', 'Fp1', band);
+band_S100 = getfield(S100, 'KDH_01', 'frontal', 'Fp1', band);
+figure; 
+subplot(2,1,1); plot(band_s0); hold on; 
+title('Sham'); xlabel('epoch (base~stim~reco)'); ylabel([band, ' power']); 
+subplot(2,1,2); plot(band_S100); hold on;
+title('100Hz Symmetric'); xlabel('epoch (base~stim~reco)'); ylabel([band, ' power']); 
+% delta
