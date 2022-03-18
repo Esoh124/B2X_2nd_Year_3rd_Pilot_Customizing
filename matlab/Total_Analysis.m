@@ -10,16 +10,16 @@
 % \eeglab2021.1: to use EEGLAB functions
 % \func: to use customized functions
 % \locs: to use locs files
-addpath 'E:\B2X\2차년도\03_pilot\CODE\matlab\eeglab2021.1'
-addpath 'E:\B2X\2차년도\03_pilot\CODE\matlab\func'
-addpath 'E:\B2X\2차년도\03_pilot\CODE\matlab\locs'
+addpath 'D:\B2X\2차년도\03_pilot\CODE\matlab\eeglab2021.1'
+addpath 'D:\B2X\2차년도\03_pilot\CODE\matlab\func'
+addpath 'D:\B2X\2차년도\03_pilot\CODE\matlab\locs'
 % eeglab; close all; clear; clc;
 
 % --Data preparation
-data_path = 'E:\B2X\2차년도\03_pilot\subject_data';
+data_path = 'D:\B2X\2차년도\03_pilot\subject_data';
 % Choose the subjects who are goning to be analyzed
 % choose_sub = [1:20];
-choose_sub = 15; 
+choose_sub = 10; 
 f = dir(data_path);
 f = f(3:sum([f.isdir]));
 if sum(choose_sub) > 0
@@ -35,7 +35,7 @@ disp(' ');
 %% set the flags for the functions below whether run or not
 %       mat2set    Filtering    SessionDividing     ICA_component_calculation   Epoching
 %       CalPSD
-flag = [0           0           0                   0                           1 ...
+flag = [1           1           1                   1                           1 ...
         1];
 %% mat2set
 warning('off')

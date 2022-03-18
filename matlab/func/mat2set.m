@@ -15,7 +15,7 @@ function EEGset = mat2set(f, mat_list, fs, n_ch, varargin)
     data = [mat_list.folder, '\', mat_list.name];
     dataformat = 'matlab';
     subject = f.name; % a name of subject ex). 01_KDH
-    chanlocs = ['E:\B2X\2차년도\03_pilot\CODE\matlab\locs', '\', 'pilot3_32ch.locs'];
+    chanlocs = ['D:\B2X\2차년도\03_pilot\CODE\matlab\locs', '\', 'pilot3_32ch.locs'];
     nbchan = n_ch;
     srate = fs;
     

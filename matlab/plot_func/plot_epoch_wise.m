@@ -1,3 +1,4 @@
+% demo version
 % epoch-wise plotting
 
 % frontal: 12 --> subplot(3,4)

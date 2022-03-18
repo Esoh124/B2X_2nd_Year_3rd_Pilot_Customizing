@@ -8,10 +8,12 @@
 close all; clear; clc;
 % add EEGLAB path
 addpath 'D:\B2X\2차년도\03_pilot\CODE\matlab\eeglab2021.1'
+eeglab; close all; clear; clc;
 
 % Choose subjects who are going to be analyzed
 subjcet_path = 'D:\B2X\2차년도\03_pilot\subject_data';
-choose_sub = 1:20; 
+% choose_sub = 1:20; 
+choose_sub = 19;
 f = dir(subjcet_path);
 f = f(3:sum([f.isdir]));
 if sum(choose_sub) > 0
@@ -37,10 +39,12 @@ g_names_Temporal = {'T7', 'T8'};
 g_ch_names = {g_names_Frontal, g_names_Central, g_names_Parietal, g_names_Occipital, g_names_Temporal};
 
 %% Extract the PSD of each epoch
+% input: all EEGset files from all subjects
+% ouput: epoch_by_sub
 
 % form of output
-% s0.KDH_01.frontal.F7.gamma 
-% s0.KDH_01.frontal.FC5
+% epoch_by_sub.s0.KDH_01.frontal.F7.gamma 
+% epoch_by_syb.s0.KDH_01.frontal.FC5
 
 % output struct initiation
 s0 = struct();
@@ -78,4 +82,41 @@ for sub_i = 1 : length(f)
         end
     end
 end
+
+epoch_by_sub.s0 = s0;
+epoch_by_sub.N020 = N020;
+epoch_by_sub.N100 = N100;
+epoch_by_sub.S020 = S020;
+epoch_by_sub.S100 = S100;
+
+%% 2. epoch_by_ch
+% input: epoch_by_sub
+% output: epoch_by_ch
+
+% -- form of input
+% epoch_by_sub.s0.KDH_01.frontal.F7.gamma 
+
+% -- desired form of output
+% epoch_by_ch.s0.Fp1 = [b1_1, b1_2, ..., b1_39, s1_1, s1_2, ..., s1_39, r1_1, r1_2, ..., r1_39;
+%                       b2_1, b2_2, ..., b2_39, s2_1, s2_2, ..., s2_39, r2_1, r2_2, ..., r2_39;
+%                       ...
+%                       b20_1, b20_2, ..., b20_39, s20_1, s20_2, ..., s20_39, r20_1, r20_2, ..., r20_39]
+
+epoch_by_ch = struct();
+
+for stim_param_i = 1 : length(stim_param_names)
+    for g_i = 1 : length(g_names) % frontal, central, parietal, occipital, temporal
+        temp_g = g_ch_names{g_i};
+        for g_ch_i = 1 : length(temp_g) % if temp_g is occipital, channels are POz, O1, Oz, O2
+            ch_by_all_sub = [];
+            for sub_i = 1 : length(f)
+                ch_by_one_sub = getfield(epoch_by_sub, stim_param_names{stim_param_i}, sub_names{sub_i}, g_names{g_i}, temp_g{g_ch_i});
+                test = [];
+            end
+        end
+    end
+end
+
+
+
 
