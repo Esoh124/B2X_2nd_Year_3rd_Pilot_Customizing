@@ -15,15 +15,16 @@ function EEGset = mat2set(f, mat_list, fs, n_ch, varargin)
     data = [mat_list.folder, '\', mat_list.name];
     dataformat = 'matlab';
     subject = f.name; % a name of subject ex). 01_KDH
-    chanlocs = ['D:\B2X\2차년도\03_pilot\CODE\matlab\locs', '\', 'pilot3_32ch.locs'];%고쳐서 실행
+    chanlocs = ['C:\Users\USER\Desktop\이소현\EEG\B2X_2nd_Year_3rd_Pilot_Customizing\matlab\locs', '\', 'pilot3_32ch.locs'];%고쳐서 실행
     nbchan = n_ch;
     srate = fs;
     
     EEGset = pop_importdata('setname', setname, 'data', data, ...
         'dataformat', dataformat, 'subject', subject, ...
         'chanlocs', chanlocs, 'nbchan', nbchan, 'srate', srate);
-
+    
     if sf == 1
+        disp('--------------------   hi   --------------------')
         savepath = [mat_list.folder, '\EEGset\'];
         mkdir(savepath);
         pop_saveset(EEGset, [savepath, '\', setname]);
