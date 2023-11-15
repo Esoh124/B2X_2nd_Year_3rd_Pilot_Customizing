@@ -1,4 +1,13 @@
-function pre_filt_EEGset = Filtering(set_list, varargin)
+function pre_filt_EEGset = Filtering(set_list,subject, varargin)
+    % Input(필수):
+    %   set_list - 한개의 .mat file까지의 path
+    % -------------------------------------------------
+    % option(varargin):
+    %   'plot' - 0 -> no plot
+    %          else -> filter 전, 후 plot
+    %   'save' - 0 -> 저장하지 않음
+    %          else -> 저장
+    %
     % Filtering the singals using EEGLAB filtering function, pop_eegfiltnew()
     % 0.5 Hz HPF
     % 100 Hz LPF
@@ -18,7 +27,7 @@ function pre_filt_EEGset = Filtering(set_list, varargin)
         pf = 0;
     end
 
-    pre_filt_EEGset = pop_loadset([set_list.folder, '\', set_list.name]);
+    pre_filt_EEGset = pop_loadset([set_list.folder, '\', set_list.name]); %set_list안의 파일 EEGLAB EEG 구조체로 읽기
 
     % Filtering
     % if you wanna see magnitude of the filter, put option of
@@ -34,16 +43,18 @@ function pre_filt_EEGset = Filtering(set_list, varargin)
         subplot(2,1,1);
         plot(pre_filt_EEGset.data(1:2,:)'); hold on;
         xlim([0 200]);
-        title('before filtering', 'FontSize',15);
+        subject = erase(subject, '_');
+        name = erase(set_list.name, '_');
+        title(strcat(subject,{' '}, name, ' before filtering'), 'FontSize',15);
 
         subplot(2,1,2);
         plot(EEGset3.data(1:2,:)'); hold on;
         xlim([0 200]);
-        title('after filtering', 'FontSize', 15);
+        title(strcat(subject,{' '}, name, ' after filtering'), 'FontSize', 15);
     end
 
     if sf == 1
-        fprintf(" saving... %s\n", set_list.name(1:5));
+        fprintf(" saving... %s\n", set_list.name(1:end-4));
         pop_saveset(EEGset, [set_list.folder, '\', set_list.name(1:end-4), '_Filt.set']);
     end
 end

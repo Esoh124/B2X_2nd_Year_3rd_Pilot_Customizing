@@ -10,6 +10,8 @@
 addpath 'C:\Users\USER\Desktop\이소현\EEG\B2X_2nd_Year_3rd_Pilot_Customizing\matlab\eeglab2021.1'
 addpath 'C:\Users\USER\Desktop\이소현\EEG\B2X_2nd_Year_3rd_Pilot_Customizing\matlab\func'
 addpath 'C:\Users\USER\Desktop\이소현\EEG\B2X_2nd_Year_3rd_Pilot_Customizing\matlab\locs'
+eeglab;
+close all;
 % eeglab; close all; clear; clc;
 
 % --Data preparation
@@ -32,7 +34,7 @@ disp(' ');
 %% set the flags for the functions below whether run or not
 %       mat2set    Filtering    SessionDividing     ICA_component_calculation   Epoching
 %       CalPSD
-flag = [1           1           0                   0                           0 ...
+flag = [0           0           1                   0                           0 ...
         0];
 %% mat2set
 warning('off')
@@ -58,11 +60,11 @@ end
 if flag(2) == 1
     disp('--------------------  FILTERING  --------------------')
     for sub_i = 1 : length(f)
-        set_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*0.set']);
+        set_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*0.set']);
     
         disp([f(sub_i).name]);
         for mat_i = 1 : length(set_list)
-            EEGset = Filtering(set_list(mat_i), 'plot', 0, 'save', 1);
+            EEGset = Filtering(set_list(mat_i),f(sub_i).name, 'plot', 1, 'save', 1);
         end
     end
 end
@@ -71,7 +73,7 @@ end
 if flag(3) == 1
     disp('--------------------SESSION DIVIDING--------------------')
     for sub_i = 1 : length(f)
-            set_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*_Filt.set']);
+            set_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_Filt.set']);
     
             disp([f(sub_i).name]);
             for set_num = 1 : length(set_list)
@@ -84,9 +86,9 @@ end
 if flag(4) == 1
     disp('--------------------  ICA Calculation  --------------------')
     for sub_i = 1 : length(f)
-        set_list(1:5) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*_base.set']);
-        set_list(6:10) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*_stim.set']);
-        set_list(11:15) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*_reco.set']);
+        set_list(1:2) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_base.set']);  %이부분을 지정안하고 자동으로 append하게 수정하자
+        set_list(3:4) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_stim.set']);
+        set_list(5:6) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_reco.set']);
     
         disp([f(sub_i).name]);
         for set_num = 1 : length(set_list)
@@ -111,7 +113,7 @@ if flag(5) == 1
     for sub_num = 1 : length(f)
         disp([f(sub_num).name]);
     
-        set_list = dir([f(sub_num).folder, '\', f(sub_num).name, '\EEG\EEGset\*_rmICA.set']);
+        set_list = dir([f(sub_num).folder, '\', f(sub_num).name, '\EEGset\*_rmICA.set']);
                
         for set_num = 1 : length(set_list)
             EEGset = Epoching(set_list(set_num), 'save', 1);
@@ -128,7 +130,7 @@ if flag(6) == 1
     disp('--------------------------SPECTRAL ANALYSIS------------------------')
     for sub_num = 1 : length(f)
         disp([f(sub_num).name]);
-        set_list = dir([f(sub_num).folder, '\', f(sub_num).name, '\EEG\EEGset\*_epoch.set']);
+        set_list = dir([f(sub_num).folder, '\', f(sub_num).name, '\EEGset\*_epoch.set']);
         for set_num = 1 : length(set_list)
             EEGset = CalPSD(set_list(set_num), 'save', 1);
         end

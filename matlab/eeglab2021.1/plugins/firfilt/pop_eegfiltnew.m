@@ -145,7 +145,7 @@ elseif ~ischar(varargin{1})
     if nargin > 7, options = { options{:} 'minphase'  varargin{7} }; end
     if nargin > 8, options = { options{:} 'usefftfilt' varargin{8} }; end
 else
-    options = varargin;
+    options = varargin; %1
 end
 
 % process multiple datasets
@@ -171,7 +171,7 @@ fieldlist = { 'locutoff'           'real'       []            [];
               'plotfreqz'          'integer'    [0 1]         0;
               'channels'      {'cell' 'string' 'integer' } []                {};
               'chantype'      {'cell' 'string'} []                {}  };
-g = finputcheck( options, fieldlist, 'pop_eegfiltnew');
+g = finputcheck( options, fieldlist, 'pop_eegfiltnew'); %input들 체크
 if ischar(g), error(g); end
 if isempty(g.minphase), g.minphase = 0; end
 if ~isempty(g.chantype) 
@@ -213,20 +213,21 @@ end
 % Max stop-band width
 maxTBWArray = edgeArray; % Band-/highpass
 if g.revfilt == 0 % Band-/lowpass
-    maxTBWArray(end) = fNyquist - edgeArray(end);
-elseif length(edgeArray) == 2 % Bandstop
+    maxTBWArray(end) = fNyquist - edgeArray(end);%? fNyquist가 뭔지
+elseif length(edgeArray) == 2 % Bandstop 
     maxTBWArray = diff(edgeArray) / 2;
 end
 maxDf = min(maxTBWArray);
+
 
 % Transition band width and filter order
 if isempty(g.filtorder)
 
     % Default filter order heuristic
     if g.revfilt == 1 % Highpass and bandstop
-        df = min([max([maxDf * TRANSWIDTHRATIO 2]) maxDf]);
+        df = min([max([maxDf * TRANSWIDTHRATIO 2]) maxDf]);%maxDF ->(highpass - lowcutoff, bandstop - diff/2)
     else % Lowpass and bandpass
-        df = min([max([edgeArray(1) * TRANSWIDTHRATIO 2]) maxDf]);
+        df = min([max([edgeArray(1) * TRANSWIDTHRATIO 2]) maxDf]);%edgeArray(1) 
     end
 
     g.filtorder = 3.3 / (df / EEG.srate); % Hamming window
