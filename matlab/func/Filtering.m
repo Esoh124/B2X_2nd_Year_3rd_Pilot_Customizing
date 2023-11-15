@@ -8,6 +8,7 @@ function pre_filt_EEGset = Filtering(set_list,subject, varargin)
     %   'save' - 0 -> 저장하지 않음
     %          else -> 저장
     %
+    %20231115 LSH modify : plot all filter process
     % Filtering the singals using EEGLAB filtering function, pop_eegfiltnew()
     % 0.5 Hz HPF
     % 100 Hz LPF
@@ -40,17 +41,25 @@ function pre_filt_EEGset = Filtering(set_list,subject, varargin)
     
     if pf == 1
         figure;
-        subplot(2,1,1);
+        subplot(4,1,1);
         plot(pre_filt_EEGset.data(1:2,:)'); hold on;
-        xlim([0 200]);
+        xlim([0 1000]);
         subject = erase(subject, '_');
         name = erase(set_list.name, '_');
+        legend();
         title(strcat(subject,{' '}, name, ' before filtering'), 'FontSize',15);
-
-        subplot(2,1,2);
+        subplot(4,1,2);
+        plot(EEGset1.data(1:2,:)'); hold on;
+        xlim([0 1000]);
+        title(strcat(subject,{' '}, name, ' after filtering1'), 'FontSize', 15);
+        subplot(4,1,3);
+        plot(EEGset2.data(1:2,:)'); hold on;
+        xlim([0 1000]);
+        title(strcat(subject,{' '}, name, ' after filtering2'), 'FontSize', 15);
+        subplot(4,1,4);
         plot(EEGset3.data(1:2,:)'); hold on;
-        xlim([0 200]);
-        title(strcat(subject,{' '}, name, ' after filtering'), 'FontSize', 15);
+        xlim([0 1000]);
+        title(strcat(subject,{' '}, name, ' after filtering3'), 'FontSize', 15);
     end
 
     if sf == 1

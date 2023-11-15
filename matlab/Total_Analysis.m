@@ -86,9 +86,11 @@ end
 if flag(4) == 1
     disp('--------------------  ICA Calculation  --------------------')
     for sub_i = 1 : length(f)
-        set_list(1:2) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_base.set']);  %이부분을 지정안하고 자동으로 append하게 수정하자
+        set_list(1:2) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_base.set']);  
         set_list(3:4) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_stim.set']);
         set_list(5:6) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_reco.set']);
+        set_list(7:8) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_base1.set']);
+        set_list(9:10) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_reco1.set']);
     
         disp([f(sub_i).name]);
         for set_num = 1 : length(set_list)

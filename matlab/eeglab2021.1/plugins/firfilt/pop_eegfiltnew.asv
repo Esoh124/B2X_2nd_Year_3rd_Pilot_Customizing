@@ -195,7 +195,9 @@ if g.hicutoff == 0, g.hicutoff = []; end
 if isempty(g.hicutoff) % Convert highpass to inverted lowpass
     g.hicutoff = g.locutoff;
     g.locutoff = [];
+    disp(g.revfilt);
     g.revfilt = ~g.revfilt;
+    disp(g.revfilt);
 end
 edgeArray = sort([g.locutoff g.hicutoff]);
 
@@ -266,7 +268,6 @@ if g.revfilt == 1
 else
     b = firws(g.filtorder, cutoffArray / fNyquist, winArray);
 end
-
 
 if g.minphase
     disp('pop_eegfiltnew() - converting filter to minimum-phase (non-linear!)');
