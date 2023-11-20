@@ -359,8 +359,9 @@ else
     EEG.saved  = 'no';
 end
 
-% Store and then remove current EEG ICA weights and sphere
-% ---------------------------------------------------
+% Store and then remove current EEG ICA weights and sphere 만약 ICA를 이전에 했다면
+% 실행, 초기화
+% --------------------------------------------------- 
 fprintf('\n');
 if ~isempty(EEG.icaweights)
     fprintf('Saving current ICA decomposition in "EEG.etc.oldicaweights" (etc.).\n');
@@ -433,7 +434,7 @@ if ~strcmpi(g.icatype, 'binica')
     end
 end
 switch lower(g.icatype)
-    case 'runica' 
+    case 'runica' %여기로
         try if ismatlab, g.options = {  g.options{:}, 'interrupt', 'on' }; end; catch, end
         if tmprank == size(tmpdata,1) || pca_opt
             [EEG.icaweights,EEG.icasphere] = runica( tmpdata, 'lrate', 0.001,  g.options{:} );
