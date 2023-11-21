@@ -39,7 +39,7 @@ disp(' ');
 %% set the flags for the functions below whether run or not
 %       mat2set    Filtering    SessionDividing     ICA_component_calculation   Epoching
 %       CalPSD
-flag = [1           1           1                   1                           0 ...
+flag = [0           0           0                   1                           0 ...
         0];
 %% mat2set
 warning('off')
@@ -87,7 +87,7 @@ if flag(3) == 1
     end
 end
 
-%% ICA component calculation
+% ICA component calculation
 if flag(4) == 1
     clear set_list;
     disp('--------------------  ICA Calculation  --------------------')
@@ -130,7 +130,7 @@ if flag(4) ==1
         
         disp([f(sub_i).name]);
         for set_num = 1 : length(set_list)
-            EEGset = ICA_EOG_Correlation(set_list(set_num), 'save', 1, 'plot', 1);
+            EEGset = ICA_EOG_Correlation(set_list(set_num), 'save', 1);
         end
     end
 end
