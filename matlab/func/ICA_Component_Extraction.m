@@ -16,7 +16,7 @@ function EEGset = ICA_Component_Extraction(set_list, varargin)
 
 
 
-    tmpdata = eeg_getdatact(EEGset, 'component', [1:size(EEGset.icaweights,1)]); %eeg와 icaweights로 component activity 저장
+    tmpdata = eeg_getdatact(EEGset, 'component', [1:size(EEGset.icaweights,1)]);
     EEGset.compoactivity = tmpdata;
     %eegplot(tmpdata, 'srate', EEGset.srate, 'limits', [EEGset.xmin EEGset.xmax]*1000); %확인용 plot
     

@@ -39,7 +39,7 @@ disp(' ');
 %% set the flags for the functions below whether run or not
 %       mat2set    Filtering    SessionDividing     ICA_component_calculation   Epoching
 %       CalPSD
-flag = [1           1           1                   1                           0 ...
+flag = [0           0           0                   1                           0 ...
         0];
 %% mat2set
 warning('off')
@@ -69,7 +69,7 @@ if flag(2) == 1
     
         disp([f(sub_i).name]);
         for mat_i = 1 : length(set_list)
-            EEGset = Filtering(set_list(mat_i),f(sub_i).name, 'plot', 1, 'save', 1);
+            EEGset = Filtering(set_list(mat_i),f(sub_i).name, 'plot', 0, 'save', 1);
         end
     end
 end
@@ -88,50 +88,93 @@ if flag(3) == 1
 end
 
 %% ICA component calculation
+% if flag(4) == 1
+%     clear set_list;
+%     disp('--------------------  ICA Calculation  --------------------')
+%     for sub_i = 1 : length(f)
+% %         set_list(1:2) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_base.set']);  
+% %         set_list(3:4) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_stim.set']);
+% %         set_list(5:6) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_reco.set']);
+%         set_list(1:2) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_base1.set']);
+%         set_list(3:4) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_reco1.set']);
+% 
+%         disp([f(sub_i).name]);
+%         for set_num = 1 : length(set_list)
+%             EEGset = ICA_Component_Extraction(set_list(set_num), 'save', 1);
+%         end
+%     end
+% end
+
+
+
+% Component&EOG correlation
+% if flag(4) ==1
+%     disp('--------------------  ICA&EOG correlation  --------------------')
+%     for sub_i = 1 : length(f)
+%         set_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_ICA.set']);
+%         eog_list = dir([eog_f(sub_i).folder, '\', f(sub_i).name, '\*.mat']);
+% 
+%         % 적절한 eog파일만 저장
+%         for j = 1:length(set_list)
+%             for k = 1:length(eog_list)      % !수정할 방법 나중에 생각하기
+%                 disp(set_list(j).name)
+%                 disp(erase(eog_list(k).name, '.mat'))
+%                 if(contains(set_list(j).name, erase(eog_list(k).name, '.mat')))
+%                     set_list(j).eog_name = eog_list(k).name;
+%                     set_list(j).eog_folder = eog_list(k).folder;
+%                 end
+%             end
+%         end
+% 
+% 
+% 
+%         disp([f(sub_i).name]);
+%         for set_num = 1 : length(set_list)
+%             EEGset = ICA_EOG_Correlation(set_list(set_num), 'save', 1, 'plot', 0);
+%         end
+%     end
+% end
+
+%% Remove the highest corr comp
 if flag(4) == 1
-    clear set_list;
-    disp('--------------------  ICA Calculation  --------------------')
+    disp('--------------------Remove component--------------------')
     for sub_i = 1 : length(f)
-        % set_list(1:2) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_base.set']);  
-        % set_list(3:4) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_stim.set']);
-        % set_list(5:6) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_reco.set']);
-        set_list(1:2) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_base1.set']);
-        set_list(3:4) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_reco1.set']);
+            set_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_corr.set']);
+            disp([f(sub_i).name]);
 
-        disp([f(sub_i).name]);
-        for set_num = 1 : length(set_list)
-            EEGset = ICA_Component_Extraction(set_list(set_num), 'save', 1);
-        end
-    end
-end
+            for set_num = 1 : length(set_list)
+                [EEGset, newEEGset] = remove_components(set_list(set_num), 'save', 1);
+                figure;
+                subplot(3, 1, 1);
+                plot(EEGset.eog);
+                xlim tight;
+                title("EOG");
+                subplot(3, 1, 2);
+                plot(EEGset.data(6, :));
+                % xlim([0 5120]);
+                ylim([-60 60]);
+                xlim tight;
+                title("raw EEG(1)");
+                subplot(3, 1, 3);
+                plot(newEEGset.data(6, :));
+                % xlim([0 5120]);
+                ylim([-60 60]);
+                xlim tight;
+                title("removed EEG(1)");
 
 
-
-%% Component&EOG correlation
-if flag(4) ==1
-    disp('--------------------  ICA&EOG correlation  --------------------')
-    for sub_i = 1 : length(f)
-        set_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_ICA.set']);
-        eog_list = dir([eog_f(sub_i).folder, '\', f(sub_i).name, '\*.mat']);
-
-        % 적절한 eog파일만 저장
-        for j = 1:length(set_list)
-            for k = 1:length(eog_list)      % !수정할 방법 나중에 생각하기
-                disp(set_list(j).name)
-                disp(erase(eog_list(k).name, '.mat'))
-                if(contains(set_list(j).name, erase(eog_list(k).name, '.mat')))
-                    set_list(j).eog_name = eog_list(k).name;
-                    set_list(j).eog_folder = eog_list(k).folder;
-                end
+                [M, I]=max(EEGset.correlations);
+                disp(I);
+                figure;
+                subplot(2, 1, 1);
+                plot(EEGset.compoactivity(I,:));
+                xlim tight;
+                title("corr top1 component");
+                subplot(2, 1, 2);
+                plot(EEGset.eog);
+                xlim tight;
+                title("EOG");
             end
-        end
-
-
-        
-        disp([f(sub_i).name]);
-        for set_num = 1 : length(set_list)
-            EEGset = ICA_EOG_Correlation(set_list(set_num), 'save', 1, 'plot', 1);
-        end
     end
 end
 
