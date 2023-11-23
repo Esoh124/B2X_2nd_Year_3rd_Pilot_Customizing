@@ -33,10 +33,14 @@ function EEGset = ICA_EOG_Correlation(set_list, varargin)
     EEGset.eog = eog.d.eog100c.wave;
     %calculate correlation
     EEGset.correlations = zeros(length(EEGset.chanlocs), 1);
+
     for i  = 1:length(EEGset.chanlocs)
         % EEGset.correlations(i) = corr(EEGset.compoactivity(i, :)', eog.d.eog100c.wave);
-        tmp = mscohere(EEGset.compoactivity(i, :), eog.d.eog100c.wave');
-        EEGset.correlations(i) = max(mscohere(EEGset.compoactivity(i, :), eog.d.eog100c.wave'));
+        zEEG = zscore(EEGset.compoactivity(i, :));
+        zEOG = zscore(eog.d.eog100c.wave');
+        dist = dtw(zEEG, zEOG);
+        
+        EEGset.correlations(i) = dist;
     end
     
     if sf == 1
@@ -47,7 +51,7 @@ function EEGset = ICA_EOG_Correlation(set_list, varargin)
 
     if pf == 1
         %corr가장 높은 component와, EOG plot
-        [M, I]=max(EEGset.correlations);
+        [M, I]=min(EEGset.correlations);
         disp(I);
         figure;
         plot(EEGset.compoactivity(I,:));
