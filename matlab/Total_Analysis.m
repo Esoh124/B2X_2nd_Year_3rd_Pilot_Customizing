@@ -107,33 +107,31 @@ end
 
 
 
-% Component&EOG correlation
-% if flag(4) ==1
-%     disp('--------------------  ICA&EOG correlation  --------------------')
-%     for sub_i = 1 : length(f)
-%         set_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_ICA.set']);
-%         eog_list = dir([eog_f(sub_i).folder, '\', f(sub_i).name, '\*.mat']);
-% 
-%         % 적절한 eog파일만 저장
-%         for j = 1:length(set_list)
-%             for k = 1:length(eog_list)      % !수정할 방법 나중에 생각하기
-%                 disp(set_list(j).name)
-%                 disp(erase(eog_list(k).name, '.mat'))
-%                 if(contains(set_list(j).name, erase(eog_list(k).name, '.mat')))
-%                     set_list(j).eog_name = eog_list(k).name;
-%                     set_list(j).eog_folder = eog_list(k).folder;
-%                 end
-%             end
-%         end
-% 
-% 
-% 
-%         disp([f(sub_i).name]);
-%         for set_num = 1 : length(set_list)
-%             EEGset = ICA_EOG_Correlation(set_list(set_num), 'save', 1, 'plot', 0);
-%         end
-%     end
-% end
+%% Component&EOG correlation
+if flag(4) ==1
+    disp('--------------------  ICA&EOG correlation  --------------------')
+    for sub_i = 1 : length(f)
+        set_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_ICA.set']);
+        eog_list = dir([eog_f(sub_i).folder, '\', f(sub_i).name, '\*.mat']);
+
+        % 적절한 eog파일만 저장
+        for j = 1:length(set_list)
+            for k = 1:length(eog_list)      % !수정할 방법 나중에 생각하기
+                disp(set_list(j).name)
+                disp(erase(eog_list(k).name, '.mat'))
+                if(contains(set_list(j).name, erase(eog_list(k).name, '.mat')))
+                    set_list(j).eog_name = eog_list(k).name;
+                    set_list(j).eog_folder = eog_list(k).folder;
+                end
+            end
+        end
+
+        disp([f(sub_i).name]);
+        for set_num = 1 : length(set_list)
+            EEGset = ICA_EOG_Correlation(set_list(set_num), 'save', 1, 'plot', 0);
+        end
+    end
+end
 
 %% Remove the highest corr comp
 if flag(4) == 1
@@ -147,33 +145,31 @@ if flag(4) == 1
                 figure;
                 subplot(3, 1, 1);
                 plot(EEGset.eog);
-                xlim tight;
+                xlim([1,10*512]);
                 title("EOG");
                 subplot(3, 1, 2);
-                plot(EEGset.data(6, :));
-                % xlim([0 5120]);
-                ylim([-60 60]);
-                xlim tight;
+                plot(EEGset.data(26, :));
+                % ylim([-60 60]);
+                xlim([1,10*512]);
                 title("raw EEG(1)");
                 subplot(3, 1, 3);
-                plot(newEEGset.data(6, :));
-                % xlim([0 5120]);
-                ylim([-60 60]);
-                xlim tight;
+                plot(newEEGset.data(26, :));
+                % ylim([-60 60]);
+                xlim([1,10*512]);
                 title("removed EEG(1)");
 
 
-                [M, I]=max(EEGset.correlations);
-                disp(I);
-                figure;
-                subplot(2, 1, 1);
-                plot(EEGset.compoactivity(I,:));
-                xlim tight;
-                title("corr top1 component");
-                subplot(2, 1, 2);
-                plot(EEGset.eog);
-                xlim tight;
-                title("EOG");
+                % [M, I]=max(EEGset.correlations);
+                % disp(I);
+                % figure;
+                % subplot(2, 1, 1);
+                % plot(EEGset.compoactivity(I,:));
+                % xlim tight;
+                % title("corr top1 component");
+                % subplot(2, 1, 2);
+                % plot(EEGset.eog);
+                % xlim tight;
+                % title("EOG");
             end
     end
 end
