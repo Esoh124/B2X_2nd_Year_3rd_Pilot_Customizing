@@ -11,7 +11,7 @@ function [EEGset, newEEGset] = remove_components(set_list, varargin)
     EEGset= pop_loadset([set_list.folder, '\', set_list.name]);
     
     [~, rejcomp]=max(EEGset.correlations); % rejcomp - 삭제할 component의 index
-    [~, index]= maxk(EEGset.correlations, 5, 'ComparisonMethod','abs');
+    [~, index]= maxk(EEGset.correlations, 1);
     disp(index);
     newEEGset = pop_subcomp(EEGset, index, 1);% 제거
     

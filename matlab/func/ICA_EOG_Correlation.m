@@ -34,9 +34,12 @@ function EEGset = ICA_EOG_Correlation(set_list, varargin)
     %calculate correlation
     EEGset.correlations = zeros(length(EEGset.chanlocs), 1);
     for i  = 1:length(EEGset.chanlocs)
-        % EEGset.correlations(i) = corr(EEGset.compoactivity(i, :)', eog.d.eog100c.wave);
-        tmp = mscohere(EEGset.compoactivity(i, :), eog.d.eog100c.wave');
-        EEGset.correlations(i) = max(mscohere(EEGset.compoactivity(i, :), eog.d.eog100c.wave'));
+        hib_EEG = angle(hilbert(EEGset.compoactivity(i, :)));
+        hib_EOG = angle(hilbert(eog.d.eog100c.wave'));
+        [~, Ntrials] = size(hib_EOG);
+        e = exp(1i*(hib_EEG - hib_EOG));
+        plv = abs(sum(e,2)) / Ntrials;
+        EEGset.correlations(i) = plv;
     end
     
     if sf == 1
