@@ -77,6 +77,7 @@
 % 02-15-02 text interface editing -sm & ad 
 % 02-16-02 added axcopy -ad & sm
 % 03-18-02 added title -ad & sm
+% 20231129 LSH 92 93 94
 
 function com = pop_topoplot( EEG, typeplot, arg2, topotitle, rowcols, varargin);
 
@@ -86,11 +87,12 @@ if nargin < 1
    return;
 end;   
 if nargin < 2   
-   typeplot = 1;
+   % typeplot = 1;
+   typeplot = 0;
 end
-if typeplot == 0 && isempty(EEG.icasphere)
-   disp('Error: no ICA data for this set, first run ICA'); return;
-end;   
+% if typeplot == 0 && isempty(EEG.icasphere)
+%    disp('Error: no ICA data for this set, first run ICA'); return;
+% end;   
 if isempty(EEG.chanlocs) && ~isfield(EEG, 'chanmatrix')
    disp('Error: cannot plot topography without channel location file'); return;
 end;   

@@ -1,5 +1,5 @@
 function EEGset = ICA_Correlation(set_list, varargin)
-    % ICA component와 EOG의 correlation을 확인
+    % ICA component와 EOG or ECG의 correlation을 확인
 
     % set save_flag
     if sum(strcmp(varargin, 'save')) ~= 0
@@ -9,6 +9,18 @@ function EEGset = ICA_Correlation(set_list, varargin)
     end
 
     % set plot_flag
+    if sum(strcmp(varargin, 'plot')) ~= 0
+        pf = varargin{circshift(strcmp(varargin, 'plot'),1)};
+    else
+        pf = 0;
+    end
+
+    if sum(strcmp(varargin, 'ECG')) ~= 0
+        pf = varargin{circshift(strcmp(varargin, 'plot'),1)};
+    else
+        pf = 0;
+    end
+
     if sum(strcmp(varargin, 'plot')) ~= 0
         pf = varargin{circshift(strcmp(varargin, 'plot'),1)};
     else

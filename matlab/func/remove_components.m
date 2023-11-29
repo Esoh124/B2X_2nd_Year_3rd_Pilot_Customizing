@@ -7,13 +7,19 @@ function [EEGset, newEEGset] = remove_components(set_list, varargin)
     else
         sf = 0;
     end
+
+    if sum(strcmp(varargin, 'remove')) ~= 0
+        rm = varargin{circshift(strcmp(varargin, 'remove'), 1)};
+    else
+        rm = 0;
+    end
     
-    EEGset= pop_loadset([set_list.folder, '\', set_list.name]);
+    EEGset= pop_loadset([set_list.folder, '\', set_list.name]);             %data load
     
-    [~, rejcomp]=max(EEGset.correlations); % rejcomp - 삭제할 component의 index
-    [~, index]= maxk(EEGset.correlations, 1, 'ComparisonMethod','abs');
+    [~, index]= maxk(EEGset.correlations, rm, 'ComparisonMethod','abs');    %가장 높은 coh의 rm개의 index 뽑기
     disp(index);
-    newEEGset = pop_subcomp(EEGset, index, 1);% 제거
+    
+    newEEGset = pop_subcomp(EEGset, index, 1);                              % 제거
     
 
     if sf == 1
