@@ -21,7 +21,7 @@ eog_path = 'C:\Users\USER\Desktop\B2X_data\eog_ecg_mat';
 % Choose the subjects who are goning to be analyzed
 % choose_sub = [1:20];
 choose_sub = 10;
-% choose_sub(exclude_sub) = [];
+
 
 f = dir(data_path);
 f = f(3:sum([f.isdir]))

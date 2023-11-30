@@ -37,41 +37,33 @@ function EEGset = ICA_Correlation(set_list, varargin)
         % EOG session dividing
         if(contains(set_list.name, "base1"))
             eog.d.eog100c.wave = eog.d.eog100c.wave(60*eog.d.eog100c.Fs+1: 60*2*eog.d.eog100c.Fs);
+            eog.d.eog100c_2.wave = eog.d.eog100c_2.wave(60*eog.d.eog100c.Fs+1: 60*2*eog.d.eog100c.Fs);
         elseif(contains(set_list.name, "reco1"))
             eog.d.eog100c.wave = eog.d.eog100c.wave(60*13*eog.d.eog100c.Fs+6: 60*14*eog.d.eog100c.Fs+5);
+            eog.d.eog100c_2.wave = eog.d.eog100c_2.wave(60*13*eog.d.eog100c.Fs+6: 60*14*eog.d.eog100c.Fs+5);
         else
-            disp('Error: not '); return;
+            disp('Error: Not base1 or reco1'); return;
         end
         % !else문에 base1, reco1이 아닐때 오류 처리 해주기
     
         % resampling
         eog.d.eog100c.wave = resample(eog.d.eog100c.wave, 512, 1000);
-        
+        eog.d.eog100c_2.wave = resample(eog.d.eog100c_2.wave, 512, 1000);
         EEGset.eog = eog.d.eog100c.wave;
+        EEGset.eog2 = eog.d.eog100c_2.wave;
     
         % EOG filtering
-        % butter worth [1, 20] band-pass filter
+        % butter worth [1, 20]Hz band-pass filter
         Wn = [1, 20] / (512/2);
         [b, a] = butter(2, Wn, 'bandpass');
         EEGset.eog = filtfilt(b, a, EEGset.eog);
-    
-        %plotting
-        figure;
-        subplot(2, 1, 1);
-        plot(eog.d.eog100c.wave);
-        title('Before');
-        xlim tight;
-        subplot(2, 1, 2);
-        plot(EEGset.eog);
-        title('After');
-        xlim tight;
+        EEGset.eog2 = filtfilt(b, a, EEGset.eog);
         
         %calculate correlation
         EEGset.correlations = zeros(length(EEGset.chanlocs), 1);
         for i  = 1:length(EEGset.chanlocs)
-            % EEGset.correlations(i) = corr(EEGset.compoactivity(i, :)', eog.d.eog100c.wave);
-            %tmp = mscohere(EEGset.compoactivity(i, :), EEGset.eog');
             EEGset.correlations(i) = max(mscohere(EEGset.compoactivity(i, :), EEGset.eog'));
+            EEGset.eorrelations2(i) = max(mscohere(EEGset.compoactivity(i, :), EEGset.eog2'));
         end
         
         if sf == 1
@@ -81,6 +73,18 @@ function EEGset = ICA_Correlation(set_list, varargin)
         end
     
         if pf == 1
+
+            %plotting
+            figure;
+            subplot(2, 1, 1);
+            plot(eog.d.eog100c.wave);
+            title('Before');
+            xlim tight;
+            subplot(2, 1, 2);
+            plot(EEGset.eog);
+            title('After');
+            xlim tight;
+
             %corr가장 높은 component와, EOG plot
             [M, I]=max(EEGset.correlations);
             disp(I);
