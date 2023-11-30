@@ -59,9 +59,9 @@ function EEGset = ICA_Correlation(set_list, varargin)
         EEGset.eog2 = filtfilt(b, a, EEGset.eog2);
         
         %calculate correlation
-        EEGset.correlations = zeros(length(EEGset.chanlocs), 1);
-        EEGset.correlations2  = zeros(length(EEGset.chanlocs), 1);
-        for i  = 1:length(EEGset.chanlocs)
+        EEGset.correlations = zeros(size(EEGset.compoactivity, 1), 1);
+        EEGset.correlations2  = zeros(size(EEGset.compoactivity, 1), 1);
+        for i  = 1:length(size(EEGset.compoactivity, 1))
             EEGset.correlations(i) = max(mscohere(EEGset.compoactivity(i, :), EEGset.eog'));
             EEGset.correlations2(i) = max(mscohere(EEGset.compoactivity(i, :), EEGset.eog2'));
         end
@@ -138,8 +138,8 @@ function EEGset = ICA_Correlation(set_list, varargin)
         % xlim tight;
 
         %calculate correlation
-        EEGset.correlations_ecg = zeros(length(EEGset.chanlocs), 1);
-        for i  = 1:length(EEGset.chanlocs)
+        EEGset.correlations_ecg = zeros(size(EEGset.compoactivity, 1), 1);
+        for i  = 1:length(size(EEGset.compoactivity, 1))
             EEGset.correlations_ecg(i) = max(mscohere(EEGset.compoactivity(i, :), EEGset.ecg')); 
         end
         

@@ -45,13 +45,17 @@ function [command] = remove_components(set_list,  varargin)
             disp(index);
             disp('EOG 2 remove component')
             disp(index_2);
-        
-        
+         
             %Remove components
             index = [index index_2];
             index = unique(index);
+
             newEEGset = pop_subcomp(EEGset, index, 1);
-                              
+
+            %compoactivity renew
+            tmpdata = eeg_getdata(newEEGset, 'component', [1:size(newEEGset,icaweights, 1)]);
+            newEEGset.compoactivity = tmpdata;
+
             command = 5;
     
         elseif user ~= 0
@@ -128,12 +132,21 @@ function [command] = remove_components(set_list,  varargin)
     
         if sf == 1 
             if command == 5
+                %compoactivity renew
+                tmpdata = eeg_getdata(newEEGset, 'component', [1:size(newEEGset,icaweights, 1)]);
+                newEEGset.compoactivity = tmpdata;
                 pop_saveset(newEEGset, [set_list.folder, '\', set_list.name(1:end-4), '_rmEOG.set']);
             elseif command == 1
+                tmpdata = eeg_getdata(EEGset_1, 'component', [1:size(EEGset_1,icaweights, 1)]);
+                EEGset_1.compoactivity = tmpdata;
                 pop_saveset(EEGset_1, [set_list.folder, '\', set_list.name(1:end-4), '_rmEOG.set']);
             elseif command == 2
+                tmpdata = eeg_getdata(EEGset_2, 'component', [1:size(EEGset_2,icaweights, 1)]);
+                EEGset_2.compoactivity = tmpdata;
                 pop_saveset(EEGset_2, [set_list.folder, '\', set_list.name(1:end-4), '_rmEOG.set']);
             elseif command == 3
+                tmpdata = eeg_getdata(EEGset_3, 'component', [1:size(EEGset_3,icaweights, 1)]);
+                EEGset_3.compoactivity = tmpdata;
                 pop_saveset(EEGset_3, [set_list.folder, '\', set_list.name(1:end-4), '_rmEOG.set']);
             elseif command == 4
                 pop_saveset(EEGset, [set_list.folder, '\', set_list.name(1:end-4), '_rmEOG.set']);
@@ -189,8 +202,34 @@ function [command] = remove_components(set_list,  varargin)
             xlim([1,10*512]);
             title('ECG & Component');
 
-            figure;
-            
+
+            % figure;
+            % for i = 1:10
+            %     subplot(10, 1, i);
+            %     plot(EEGset.compoactivity(i,:));
+            %     title(EEGset.correlations(i));
+            %     xlim([1,10*512]);
+            % 
+            % end
+            % 
+            % figure;
+            % for i = 11:20
+            %     subplot(10, 1, i-10);
+            %     plot(EEGset.compoactivity(i,:));
+            %     title(EEGset.correlations(i));
+            %     xlim([1,10*512]);
+            % 
+            % end
+            % 
+            % figure;
+            % for i = 21:size(EEGset.compoactivity, 1);
+            %     subplot(11, 1, i-20);
+            %     plot(EEGset.compoactivity(i,:));
+            %     title(EEGset.correlations(i));
+            %     xlim([1,10*512]);
+            % 
+            % end
+
     
             % 위의 plotting을 보고 유저가 manually하게 지운다.
             % 0(data delete), 1(remove 1), 2(no need to remove), 
