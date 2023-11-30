@@ -106,9 +106,9 @@ function EEGset = ICA_Correlation(set_list, varargin)
 
         % ECG session dividing
         if(contains(set_list.name, "base1"))
-            ecg.d.ecg100c.wave = ecg.d.ecg100c.wave(60*ecg.d.ecg100c.Fs+1: 60*2*ecg.d.ecg100c.Fs);
+            ecg.d.eog100c.wave = ecg.d.ecg100c.wave(60*ecg.d.ecg100c.Fs+1: 60*2*ecg.d.ecg100c.Fs);
         elseif(contains(set_list.name, "reco1"))
-            ecg.d.ecg100c.wave = ecg.d.ecg100c.wave(60*13*ecg.d.ecg100c.Fs+6: 60*14*ecg.d.ecg100c.Fs+5);
+            ecg.d.eog100c.wave = ecg.d.ecg100c.wave(60*13*ecg.d.ecg100c.Fs+6: 60*14*ecg.d.ecg100c.Fs+5);
         else
             disp('Error: Not base1 or reco1'); return;
         end
@@ -126,16 +126,16 @@ function EEGset = ICA_Correlation(set_list, varargin)
         ecg_h = ecg_h/max(abs(ecg_h));
         EEGset.ecg = ecg_h;
  
-        % %plotting
-        % figure;
-        % subplot(2, 1, 1);
-        % plot(ecg.d.ecg100c.wave);
-        % title('Before');
-        % xlim tight;
-        % subplot(2, 1, 2);
-        % plot(EEGset.ecg);
-        % title('After');
-        % xlim tight;
+        %plotting
+        figure;
+        subplot(2, 1, 1);
+        plot(ecg.d.ecg100c.wave);
+        title('Before');
+        xlim tight;
+        subplot(2, 1, 2);
+        plot(EEGset.ecg);
+        title('After');
+        xlim tight;
 
         %calculate correlation
         EEGset.correlations_ecg = zeros(length(EEGset.chanlocs), 1);
@@ -145,7 +145,7 @@ function EEGset = ICA_Correlation(set_list, varargin)
         
         if sf == 1
             fprintf("saving....%s_corr.set...", set_list.name(1:end-4));
-            pop_saveset(EEGset, [set_list.folder, '\', set_list.name(1:end-4), '_corrECG.set']);
+            pop_saveset(EEGset, [set_list.folder, '\', set_list.name(1:end-4), '_corr.set']);
             fprintf('done!\n');
         end
 
@@ -165,5 +165,30 @@ function EEGset = ICA_Correlation(set_list, varargin)
             xlabel('EOG');
             ylabel('Components');
         end
+        % if sf == 1
+        %     fprintf("saving...%s_corr.set... ", set_list.name(1:end-4));
+        %     pop_saveset(EEGset, [set_list.folder, '\', set_list.name(1:end-4), '_corr.set']);
+        %     fprintf('done!\n')
+        % end
+        % 
+        % if pf == 1
+        %     %corr가장 높은 component와, EOG plot
+        %     [M, I]=max(EEGset.correlations);
+        %     disp(I);
+        %     figure;
+        %     plot(EEGset.compoactivity(I,:));
+        %     hold on;
+        %     plot(EEGset.eog);
+        %     legend();
+        % 
+        %     figure;
+        %     imagesc(EEGset.correlations);
+        %     colorbar;  
+        %     title('Correlation Matrix');
+        %     xlabel('EOG');
+        %     ylabel('Components');
+        % end
     end
+
+
 end
