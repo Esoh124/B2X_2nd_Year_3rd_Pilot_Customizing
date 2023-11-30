@@ -20,8 +20,6 @@ eog_path = 'C:\Users\USER\Desktop\B2X_data\eog_ecg_mat';
 
 % Choose the subjects who are goning to be analyzed
 choose_sub = [1:20];
-exclude_sub = [2, 8, 10, 13, 15];
-choose_sub(exclude_sub) = [];
 
 f = dir(data_path);
 f = f(3:sum([f.isdir]))
@@ -91,22 +89,22 @@ if flag(3) == 1
 end
 
 %% ICA component calculation
-if flag(4) == 1
-    clear set_list;
-    disp('--------------------  ICA Calculation  --------------------')
-    for sub_i = 1 : length(f)
-%         set_list(1:2) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_base.set']);  
-%         set_list(3:4) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_stim.set']);
-%         set_list(5:6) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_reco.set']);
-        set_list(1:2) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_base1.set']);
-        set_list(3:4) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_reco1.set']);
-
-        disp([f(sub_i).name]);
-        for set_num = 1 : length(set_list)
-            EEGset = ICA_Component_Extraction(set_list(set_num), 'save', 1);
-        end
-    end
-end
+% if flag(4) == 1
+%     clear set_list;
+%     disp('--------------------  ICA Calculation  --------------------')
+%     for sub_i = 1 : length(f)
+% %         set_list(1:2) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_base.set']);  
+% %         set_list(3:4) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_stim.set']);
+% %         set_list(5:6) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_reco.set']);
+%         set_list(1:2) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_base1.set']);
+%         set_list(3:4) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_reco1.set']);
+% 
+%         disp([f(sub_i).name]);
+%         for set_num = 1 : length(set_list)
+%             EEGset = ICA_Component_Extraction(set_list(set_num), 'save', 1);
+%         end
+%     end
+% end
 
 
 
@@ -131,7 +129,7 @@ if flag(4) ==1
 
         disp([f(sub_i).name]);
         for set_num = 1 : length(set_list)
-            EEGset = ICA_EOG_Correlation(set_list(set_num), 'save', 1, 'plot', 0);
+            EEGset = ICA_Correlation(set_list(set_num), 'save', 1, 'plot', 0);
         end
     end
 end
