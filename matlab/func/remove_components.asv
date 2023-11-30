@@ -32,7 +32,7 @@ function [command] = remove_components(set_list,  varargin)
         [~, index]= maxk(EEGset.correlations, rm, 'ComparisonMethod','abs');    %가장 높은 coh의 rm개의 index 뽑기
         [~, index_2] = maxk(EEGset.correlations2, rm, 'ComparisonMethod', 'abs');
     
-        disp('EOG 1 remove component')
+        disp('EOG 1 remove component') 
         disp(index);
         disp('EOG 2 remove component')
         disp(index_2);
@@ -105,7 +105,7 @@ function [command] = remove_components(set_list,  varargin)
         xlim([1,10*512]);
         title('EOG_2');
         subplot(4, 1, 4);
-        plot(EEGset.compoactivity(index_2, :))
+        plot(EEGset.compoactivity(index_2, :));
         xlim([1,10*512]);
         title('EOG_2 & Component');
         
