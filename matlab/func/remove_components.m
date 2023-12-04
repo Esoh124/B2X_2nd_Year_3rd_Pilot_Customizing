@@ -36,7 +36,7 @@ function [command] = remove_components(set_list,  varargin)
 
 
     if is_ecg == 0 %EOG
-        if user == 0
+        if user == 0 
         
             [~, index]= maxk(EEGset.correlations, rm, 'ComparisonMethod','abs');    %가장 높은 coh의 rm개의 index 뽑기
             [~, index_2] = maxk(EEGset.correlations2, rm, 'ComparisonMethod', 'abs');
@@ -53,7 +53,7 @@ function [command] = remove_components(set_list,  varargin)
             newEEGset = pop_subcomp(EEGset, index, 1);
 
             %compoactivity renew
-            tmpdata = eeg_getdata(newEEGset, 'component', [1:size(newEEGset,icaweights, 1)]);
+            tmpdata = eeg_getdatact(newEEGset, 'component', [1:size(newEEGset,icaweights, 1)]);
             newEEGset.compoactivity = tmpdata;
 
             command = 5;
@@ -133,19 +133,19 @@ function [command] = remove_components(set_list,  varargin)
         if sf == 1 
             if command == 5
                 %compoactivity renew
-                tmpdata = eeg_getdata(newEEGset, 'component', [1:size(newEEGset,icaweights, 1)]);
+                tmpdata = eeg_getdatact(newEEGset, 'component', [1:size(newEEGset,icaweights, 1)]);
                 newEEGset.compoactivity = tmpdata;
                 pop_saveset(newEEGset, [set_list.folder, '\', set_list.name(1:end-4), '_rmEOG.set']);
             elseif command == 1
-                tmpdata = eeg_getdata(EEGset_1, 'component', [1:size(EEGset_1,icaweights, 1)]);
+                tmpdata = eeg_getdatact(EEGset_1, 'component', [1:size(EEGset_1,icaweights, 1)]);
                 EEGset_1.compoactivity = tmpdata;
                 pop_saveset(EEGset_1, [set_list.folder, '\', set_list.name(1:end-4), '_rmEOG.set']);
             elseif command == 2
-                tmpdata = eeg_getdata(EEGset_2, 'component', [1:size(EEGset_2,icaweights, 1)]);
+                tmpdata = eeg_getdatact(EEGset_2, 'component', [1:size(EEGset_2,icaweights, 1)]);
                 EEGset_2.compoactivity = tmpdata;
                 pop_saveset(EEGset_2, [set_list.folder, '\', set_list.name(1:end-4), '_rmEOG.set']);
             elseif command == 3
-                tmpdata = eeg_getdata(EEGset_3, 'component', [1:size(EEGset_3,icaweights, 1)]);
+                tmpdata = eeg_getdatact(EEGset_3, 'component', [1:size(EEGset_3,icaweights, 1)]);
                 EEGset_3.compoactivity = tmpdata;
                 pop_saveset(EEGset_3, [set_list.folder, '\', set_list.name(1:end-4), '_rmEOG.set']);
             elseif command == 4
@@ -161,12 +161,13 @@ function [command] = remove_components(set_list,  varargin)
             disp(index);
         
             %Remove components
+            
             newEEGset = pop_subcomp(EEGset, index, 1);
                               
             command = 1;
     
         elseif user ~= 0
-            [~, index]= maxk(EEGset.correlations, rm, 'ComparisonMethod','abs');    %가장 높은 coh의 rm개의 index 뽑기
+            [~, index]= maxk(EEGset.correlations_ecg, rm, 'ComparisonMethod','abs');    %가장 높은 coh의 rm개의 index 뽑기
             
             disp('ECG remove component')
             disp(index);
@@ -238,6 +239,8 @@ function [command] = remove_components(set_list,  varargin)
     
         if sf == 1 
             if command == 1
+                tmpdata = eeg_getdatact(newEEGset, 'component', [1:size(newEEGset.icaweights, 1)]);
+                newEEGset.compoactivity = tmpdata;
                 pop_saveset(newEEGset, [set_list.folder, '\', set_list.name(1:end-4), '_rmECG.set']);
             elseif command == 2
                 pop_saveset(EEGset, [set_list.folder, '\', set_list.name(1:end-4), '_rmECG.set']);

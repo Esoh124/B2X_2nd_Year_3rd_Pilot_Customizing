@@ -67,8 +67,8 @@ function EEGset = ICA_Correlation(set_list, varargin)
         end
         
         if sf == 1
-            fprintf("saving...%s_corr.set... ", set_list.name(1:end-4));
-            pop_saveset(EEGset, [set_list.folder, '\', set_list.name(1:end-4), '_corr.set']);
+            fprintf("saving...%s_corrEOG.set... ", set_list.name(1:end-4));
+            pop_saveset(EEGset, [set_list.folder, '\', set_list.name(1:end-4), '_corrEOG.set']);
             fprintf('done!\n')
         end
     
@@ -117,15 +117,15 @@ function EEGset = ICA_Correlation(set_list, varargin)
         ecg.d.ecg100c.wave = resample(ecg.d.ecg100c.wave, 512, 1000);
         EEGset.ecg = ecg.d.ecg100c.wave;
 
-        % ECG filtering - from pan&tompkins noise cancellation
-        % noise cancelation(Filtering)(5-15Hz)
-        Wn = [5, 15] / (512/2);
+        % ECG filtering
+        % noise cancellation(Filtering)(0.5 ~ 60Hz)
+        Wn = [0.5, 60] / (512/2);
         N = 3;
         [a, b] = butter(N, Wn);
         ecg_h = filtfilt(a, b, EEGset.ecg);
         ecg_h = ecg_h/max(abs(ecg_h));
         EEGset.ecg = ecg_h;
- 
+
         % %plotting
         % figure;
         % subplot(2, 1, 1);
@@ -139,30 +139,33 @@ function EEGset = ICA_Correlation(set_list, varargin)
 
         %calculate correlation
         EEGset.correlations_ecg = zeros(size(EEGset.compoactivity, 1), 1);
-        for i  = 1:length(size(EEGset.compoactivity, 1))
+        for i  = 1:size(EEGset.compoactivity, 1)
             EEGset.correlations_ecg(i) = max(mscohere(EEGset.compoactivity(i, :), EEGset.ecg')); 
         end
         
         if sf == 1
-            fprintf("saving....%s_corr.set...", set_list.name(1:end-4));
+            fprintf("saving....%s_corrECG.set...", set_list.name(1:end-4));
             pop_saveset(EEGset, [set_list.folder, '\', set_list.name(1:end-4), '_corrECG.set']);
             fprintf('done!\n');
         end
 
         if pf == 1 
-            [M, I]=max(EEGset.correlations);
+            [~, I]=max(EEGset.correlations_ecg);
             disp(I);
             figure;
+            subplot(2, 1, 1);
             plot(EEGset.compoactivity(I,:));
-            hold on;
+            title(EEGset.correlations_ecg(I));
+            xlim([1,10*512]);
+            subplot(2, 1, 2);
             plot(EEGset.ecg);
-            legend();
+            xlim([1,10*512]);
 
             figure;
             imagesc(EEGset.correlations_ecg);
             colorbar;  
             title('Correlation Matrix');
-            xlabel('EOG');
+            xlabel('ECG');
             ylabel('Components');
         end
     end

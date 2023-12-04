@@ -12,14 +12,14 @@ addpath 'C:\Users\USER\Desktop\이소현\EEG\B2X_2nd_Year_3rd_Pilot_Customizing\
 addpath 'C:\Users\USER\Desktop\이소현\EEG\B2X_2nd_Year_3rd_Pilot_Customizing\matlab\locs'
 eeglab;
 close all;
-% eeglab; close all; clear; clc;
-
+% eeglab; close all; clear; cl
 % --Data preparation
 data_path = 'C:\Users\USER\Desktop\converted_B2X2\txt';
 eog_path = 'C:\Users\USER\Desktop\B2X_data\eog_ecg_mat';
 
 % Choose the subjects who are goning to be analyzed
-choose_sub = [1:20];
+% choose_sub = [1:20];
+choose_sub = [2 4 8 10 13 19];
 
 f = dir(data_path);
 f = f(3:sum([f.isdir]))
@@ -40,7 +40,7 @@ disp(' ');
 %% set the flags for the functions below whether run or not
 %       mat2set    Filtering    SessionDividing     ICA_component_calculation EOG_coh_remove    ECG_coh_remove     Epoching
 %       CalPSD
-flag = [0           0           0                   0                         0                 1                  0 ...
+flag = [1           1           1                   1                         0                 0                  0 ...
         0];
 %% mat2set
 warning('off')
@@ -137,15 +137,15 @@ if flag(5) == 1
     disp('--------------------Remove component--------------------')
     result = [];
     for sub_i = 1 : length(f)
-            set_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_corr.set']);
+            set_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_corrEOG.set']);
             disp([f(sub_i).name]);
             for set_num = 1 : length(set_list)
-                result = [result remove_components(set_list(set_num), 'save', 1, 'user', 1, 'remove', 1)];
+                result = [result remove_components(set_list(set_num), 'save', 1, 'user', 1, 'remove', 2)];
             end
     end
     writematrix(result, 'Data_check_result.txt', 'Delimiter', ' ');
 end
-
+        
 
 %% Component&ECG correlation
 if flag(6) ==1
@@ -185,6 +185,7 @@ if flag(6) == 1
             writematrix(result, 'Data_check_result_ECG.txt', 'Delimiter', ' ');
     end
 end
+
 %% Manually Name Change
 % for sub_i = 1 : length(f)
 %     set_list= dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*_ICA.set']);
