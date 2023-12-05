@@ -19,7 +19,7 @@ eog_path = 'C:\Users\USER\Desktop\B2X_data\eog_ecg_mat';
 
 % Choose the subjects who are goning to be analyzed
 % choose_sub = [1:20];
-choose_sub = [2 4 8 10 13 19];
+choose_sub = [1:20];
 
 f = dir(data_path);
 f = f(3:sum([f.isdir]))
@@ -166,7 +166,7 @@ if flag(6) ==1
 
         disp([f(sub_i).name]);
         for set_num = 1 : length(set_list)
-            EEGset = ICA_Correlation(set_list(set_num), 'save', 1, 'plot', 0, 'ECG', 1);
+            EEGset = ICA_Correlation(set_list(set_num), 'save', 1, 'plot', 0);
         end
     end
 end

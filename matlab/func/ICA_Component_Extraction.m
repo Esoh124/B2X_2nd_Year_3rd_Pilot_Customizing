@@ -14,11 +14,9 @@ function EEGset = ICA_Component_Extraction(set_list, varargin)
     % pop_importdata를 별도로 실행하지 않기 때문에, 아래값을 직접 변경
     EEGset.setname = [EEGset.setname, '_ICA'];
 
-
-
+    % EEGset구조체 안에 component activity를 따로 저장
     tmpdata = eeg_getdatact(EEGset, 'component', [1:size(EEGset.icaweights,1)]);
     EEGset.compoactivity = tmpdata;
-    %eegplot(tmpdata, 'srate', EEGset.srate, 'limits', [EEGset.xmin EEGset.xmax]*1000); %확인용 plot
     
     if sf == 1
         fprintf("saving: %s_ICA.set... ", set_list.name(1:end-4));

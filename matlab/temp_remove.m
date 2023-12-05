@@ -12,7 +12,7 @@ function [command, index] = temp_remove(set_list,  varargin)
     end
 
     if sum(strcmp(varargin, 'try')) ~= 0
-        temp = varargin{circshift(strcmp(varargin, 'remove'), 1)};
+        temp = varargin{circshift(strcmp(varargin, 'try'), 1)};
     else
         temp = 0;
     end

@@ -30,9 +30,9 @@ function EEGset = SessionDividing(set_list, varargin)
 
     if sf == 1
         fprintf("saving...\n");
-        pop_saveset(base_set, [set_list.folder, '\', set_list.name(1:end-4), '_base.set']);
-        pop_saveset(stim_set, [set_list.folder, '\', set_list.name(1:end-4), '_stim.set']);
-        pop_saveset(reco_set, [set_list.folder, '\', set_list.name(1:end-4), '_reco.set']);
+        % pop_saveset(base_set, [set_list.folder, '\', set_list.name(1:end-4), '_base.set']);
+        % pop_saveset(stim_set, [set_list.folder, '\', set_list.name(1:end-4), '_stim.set']);
+        % pop_saveset(reco_set, [set_list.folder, '\', set_list.name(1:end-4), '_reco.set']);
         pop_saveset(base1_set, [set_list.folder, '\', set_list.name(1:end-4), '_base1.set']);
         pop_saveset(reco1_set, [set_list.folder, '\', set_list.name(1:end-4), '_reco1.set']);
     end

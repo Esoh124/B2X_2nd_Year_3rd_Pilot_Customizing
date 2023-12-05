@@ -15,22 +15,16 @@ function EEGset = ICA_Correlation(set_list, varargin)
         pf = 0;
     end
     
-    % if ECG
-    if sum(strcmp(varargin, 'ECG')) ~= 0
-        is_ecg = 1;
-    else
-        is_ecg = 0;
-    end
     
     % if EOG
     if sum(strcmp(varargin, 'EOG')) ~= 0
         is_eog = 1;
-    else
-        is_eog = 0;
+    else % ECG
+        is_eog = 0; 
     end
 
     
-    if is_eog
+    if is_eog ~=0 %EOG coherence
         EEGset = pop_loadset([set_list.folder, '\', set_list.name]);
         eog = load([set_list.eog_folder, '\', set_list.eog_name]);
     
@@ -92,7 +86,7 @@ function EEGset = ICA_Correlation(set_list, varargin)
             hold on;
             plot(EEGset.eog);
             legend();
-%plotting arel
+
             figure;
             imagesc(EEGset.correlations);
             colorbar;  
@@ -100,7 +94,8 @@ function EEGset = ICA_Correlation(set_list, varargin)
             xlabel('EOG');
             ylabel('Components');
         end
-    elseif is_ecg
+        
+    else %ECG coherence
         EEGset = pop_loadset([set_list.folder, '\', set_list.name]);
         ecg = load([set_list.ecg_folder, '\', set_list.ecg_name]);
 
