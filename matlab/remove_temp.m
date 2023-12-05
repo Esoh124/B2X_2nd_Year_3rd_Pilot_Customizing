@@ -35,10 +35,9 @@ for sub_i = 1 : length(f)
         
         disp([f(sub_i).name]);
         for set_num = 1 : length(set_list)
-            % if set_list(set_num).name == ""
             [tmp1, index] = temp_remove(set_list(set_num), 'save', 1, 'remove', 2);
             [tmp, index2] = temp_remove(set_list(set_num), 'save', 1, 'remove', 2, 'try', 1);
-            result1 = [result1 tmp1];
+            result1 = [result1 tmp1];%각 파일 command 저장
             result = [result tmp];
             remove = [index index2];
             remove = unique(remove);
@@ -53,7 +52,6 @@ for sub_i = 1 : length(f)
             plot(EEGset1.data(26, :));
             subtitle('remove result');
             xlim([1,10*512]);
-            % end
         end
 end
 writematrix(result1, 'Data_check_result1.txt', 'Delimiter', ' ');

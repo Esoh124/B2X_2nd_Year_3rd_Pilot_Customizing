@@ -121,17 +121,6 @@ function EEGset = ICA_Correlation(set_list, varargin)
         ecg_h = ecg_h/max(abs(ecg_h));
         EEGset.ecg = ecg_h;
 
-        % %plotting
-        % figure;
-        % subplot(2, 1, 1);
-        % plot(ecg.d.ecg100c.wave);
-        % title('Before');
-        % xlim tight;
-        % subplot(2, 1, 2);
-        % plot(EEGset.ecg);
-        % title('After');
-        % xlim tight;
-
         %calculate correlation
         EEGset.correlations_ecg = zeros(size(EEGset.compoactivity, 1), 1);
         for i  = 1:size(EEGset.compoactivity, 1)

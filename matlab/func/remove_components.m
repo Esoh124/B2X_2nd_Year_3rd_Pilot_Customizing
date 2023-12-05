@@ -192,6 +192,7 @@ function [command] = remove_components(set_list,  varargin)
             xlim([1, 10*512]);
             title('remove 1');
             
+            %plotting을 remove 개수에 맞게 plotting하면 좋음
             figure;
             subtitle('component coh 1');
             subplot(2, 1, 1);

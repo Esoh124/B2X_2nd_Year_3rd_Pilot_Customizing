@@ -10,7 +10,7 @@ function [command, index] = EOG_remove(set_list,  varargin)
     else
         rm = 0;
     end
-
+    
     if sum(strcmp(varargin, 'try')) ~= 0
         temp = varargin{circshift(strcmp(varargin, 'try'), 1)};
     else
@@ -20,6 +20,7 @@ function [command, index] = EOG_remove(set_list,  varargin)
     EEGset= pop_loadset([set_list.folder, '\', set_list.name]);             %data load
     
     if temp == 0
+        
         [~, index]= maxk(EEGset.correlations, rm, 'ComparisonMethod','abs');   
     else
         [~, index]= maxk(EEGset.correlations2, rm, 'ComparisonMethod','abs');   
@@ -82,7 +83,7 @@ function [command, index] = EOG_remove(set_list,  varargin)
     
     % 위의 plotting을 보고 유저가 manually하게 지운다.
     % 0(data delete), 1(remove EOG_1), 2(remove EOG_2), 
-    % 3(remove EOG_1&2)
+    % 3(Save data)
     command = input('Command(0 - delete data, 1 - remove 1, 2 - remove 2, 3 - remove no need to remove) : ');
 
 

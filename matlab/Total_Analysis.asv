@@ -138,35 +138,32 @@ if flag(5) == 1
     result = [];
     result1 = [];
     for sub_i = 1 : length(f)
+        remove = [];
         set_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_corrEOG.set']);
         
         disp([f(sub_i).name]);
         for set_num = 1 : length(set_list)
-            remove = [];
             [tmp1, index] = EOG_remove(set_list(set_num), 'save', 0, 'remove', 2);
             [tmp, index2] = EOG_remove(set_list(set_num), 'save', 0, 'remove', 2, 'try', 1);
             result1 = [result1 tmp1];%각 파일 command 저장
             result = [result tmp];
             remove = [index index2];
             remove = unique(remove);
-            disp('Final remove components');
-            disp(remove);
             EEGset= pop_loadset([set_list(set_num).folder, '\', set_list(set_num).name]);
-            EEGset_1 = pop_subcomp(EEGset, remove, 1);% 위 결과에 따라 전체 remove
+            EEGset1 = pop_subcomp(EEGset, remove, 1);% 위 결과에 따라 전체 remove
             figure;
             subplot(2, 1, 1);
             plot(EEGset.data(26, :));
             subtitle('raw');
             xlim([1,10*512]);
             subplot(2, 1, 2);
-            plot(EEGset_1.data(26, :));
+            plot(EEGset1.data(26, :));
             subtitle('remove result');
             xlim([1,10*512]);
-
             %결과 저장
             tmpdata = eeg_getdatact(EEGset_1, 'component', [1:size(EEGset_1.icaweights, 1)]);
             EEGset_1.compoactivity = tmpdata;
-            pop_saveset(EEGset_1, [set_list(set_num).folder, '\', set_list(set_num).name(1:end-4), '_rmEOG.set']);
+            pop_saveset(EEGset_1, [set_list.folder, '\', set_list.name(1:end-4), '_rmEOG.set']);
         end
     end
     writematrix(result1, 'Data_check_result1.txt', 'Delimiter', ' ');
@@ -230,7 +227,7 @@ if flag(7) == 1
     disp('--------------------------EPOCHING------------------------')
     for sub_num = 1 : length(f)
         disp([f(sub_num).name]);
-
+    
         set_list = dir([f(sub_num).folder, '\', f(sub_num).name, '\EEGset\*_rmICA.set']);
                
         for set_num = 1 : length(set_list)
