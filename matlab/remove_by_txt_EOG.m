@@ -6,7 +6,6 @@ ECG_txt = 'Data_check_result_ECG';
 fid = fopen(EOG_txt, 'r');
 
 disp(fid)
-number_array = [];
 
 data = textscan(fid, '%f');
 fclose(fid);

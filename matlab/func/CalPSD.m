@@ -15,11 +15,10 @@ function EEGset = CalPSD(set_list, varargin)
     fs = EEGset.srate;
     chs = {EEGset.chanlocs.labels};
     epochs = [EEGset.event.latency]; % 각 epoch의 start, end indice가 저장되어 있는 배열
-%     arti_flag = [EEGset.event.artifact]; % 각 epoch이 artifact를 포함하면 1이 저장되어 있음
     
     EEGset = setfield(EEGset, 'SpectralAnalysis', []); % PSD 필드 추가 in EEGset
     
-    for ch_num = 1 : length(chs)
+    for ch_num = 1 : length(chs) %
         data = EEGset.data(ch_num, :);
     
         % EEGset.SpectralAnalysis.Ch 선언 (ch: F3, Fz, ..., O4)
@@ -31,25 +30,47 @@ function EEGset = CalPSD(set_list, varargin)
         PSD = []; % epoch별 PSD가 담기는 array
         log_PSD = []; 
 
-        % 모든 epoch의 주파수 파워가 stack 되는 array
+        % 모든 epoch의 주파수 파워가 stack 되는 array - abs
         gamma = []; beta = []; alpha = [];
         theta = []; delta = [];
         
         total_power = []; % 각 epoch마다 total power를 stack
 
-        % 모든 epoch의 normalized 주파수 파워가 stack 되는 array
+        % 모든 epoch의 normalized 주파수 파워가 stack 되는 array - relative
         n_gamma = []; n_beta = []; n_alpha = [];
         n_theta = []; n_delta = [];
-
-%         log_gamma = []; log_beta = []; log_alpha = [];
-%         log_theta = []; log_delta = [];
     
-            
-        % artifact가 포함되지 않은 epoch에 대해 PSD 추출
+
+        %window로 나누지 않고 한번
+        [pxx, f] = periodogram(data, hanning(EEGset.pnts), EEGset.pnts, EEGset.srate);
+        [temp_gamma, temp_beta, temp_alpha, temp_theta, temp_delta] = CalPowers(pxx, f);
+        temp_total_power = temp_gamma + temp_beta + temp_alpha + temp_theta + temp_delta;
+        [temp_n_gamma, temp_n_beta, temp_n_alpha, temp_n_theta, temp_n_delta] = ...
+                NormPower(temp_total_power, temp_gamma, temp_beta, temp_alpha, temp_theta, temp_delta);
+
+        EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'no_epoch_data', 'PSD', pxx);
+        EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'no_epoch_data', 'f', f);
+        EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'no_epoch_data', 'gamma', temp_gamma);
+        EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'no_epoch_data', 'beta', temp_beta);
+        EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'no_epoch_data', 'alpha', temp_alpha);
+        EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'no_epoch_data', 'theta', temp_theta);
+        EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'no_epoch_data', 'delta', temp_delta);
+
+        EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'no_epoch_data', 'log', 'f', f);
+        EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'no_epoch_data', 'log', 'PSD', log_PSD);
+
+        EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'no_epoch_data', 'norm', 'total_power', temp_total_power);
+        EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'no_epoch_data', 'norm', 'gamma', temp_n_gamma);
+        EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'no_epoch_data', 'norm', 'beta', temp_n_beta);
+        EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'no_epoch_data', 'norm', 'alpha', temp_n_alpha);
+        EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'no_epoch_data', 'norm', 'theta', temp_n_theta);
+        EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'no_epoch_data', 'norm', 'delta', temp_n_delta);
+
+        
+        %PSD 추출
         for epoch_num = 1 : length(epochs)/2
-%             if arti_flag(2*epoch_num-1)==1 || arti_flag(2*epoch_num)==1
-%                 continue;
-%             end
+            
+            %PSD 계산
             epoch_idx = epochs(2*epoch_num-1):epochs(2*epoch_num);
             nfft = length(epoch_idx);
             [pxx, f] = periodogram(data(epoch_idx), hanning(length(epoch_idx)), nfft, fs);
@@ -58,7 +79,8 @@ function EEGset = CalPSD(set_list, varargin)
 
             % epoch_num에 따른 해당 epoch에 대한 파워 계산
             [temp_gamma, temp_beta, temp_alpha, temp_theta, temp_delta] = CalPowers(pxx, f);
-            % stacking
+
+            % stacking - abs
             gamma = [gamma, temp_gamma];
             beta = [beta, temp_beta];
             alpha = [alpha, temp_alpha];
@@ -69,21 +91,16 @@ function EEGset = CalPSD(set_list, varargin)
             temp_total_power = temp_gamma + temp_beta + temp_alpha + temp_theta + temp_delta;
             [temp_n_gamma, temp_n_beta, temp_n_alpha, temp_n_theta, temp_n_delta] = ...
                 NormPower(temp_total_power, temp_gamma, temp_beta, temp_alpha, temp_theta, temp_delta);
-            % norm power stacking
+
+            % norm power stacking - relative
             total_power = [total_power, temp_total_power];
             n_gamma = [n_gamma, temp_n_gamma];
             n_beta = [n_beta, temp_n_beta];
             n_alpha = [n_alpha, temp_n_alpha];
             n_theta = [n_theta, temp_n_theta];
             n_delta = [n_delta, temp_n_delta];
-
-%             [log_temp_gamma, log_temp_beta, log_temp_alpha, log_temp_theta, log_temp_delta] = CalPowers(10*log10(pxx), f);
-%             log_gamma = [log_gamma, log_temp_gamma];
-%             log_beta = [log_beta, log_temp_beta];
-%             log_alpha = [log_alpha, log_temp_alpha];
-%             log_theta = [log_theta, log_temp_theta];
-%             log_delta = [log_delta, log_temp_delta];
         end
+
         % 모든 epoch에 대한 for문이 끝나고, stacking이 완료된 배열에 평균을 적용
         total_power_of_mean_PSD = mean(gamma) + mean(beta) + mean(alpha) + mean(theta) + mean(delta);
         n_gamma_of_mean_PSD = mean(gamma)/total_power_of_mean_PSD;
@@ -110,11 +127,6 @@ function EEGset = CalPSD(set_list, varargin)
         EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'epoch_data', 'norm', 'alpha', n_alpha);
         EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'epoch_data', 'norm', 'theta', n_theta);
         EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'epoch_data', 'norm', 'delta', n_delta);
-%         EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'epoch_data', 'log', 'gamma', log_gamma);
-%         EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'epoch_data', 'log', 'beta', log_beta);
-%         EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'epoch_data', 'log', 'alpha', log_alpha);
-%         EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'epoch_data', 'log', 'theta', log_theta);
-%         EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'epoch_data', 'log', 'delta', log_delta);
     
         EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'Mean_epoch', 'PSD', mean(PSD'));
         EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'Mean_epoch', 'f', f);  
@@ -132,11 +144,7 @@ function EEGset = CalPSD(set_list, varargin)
 
         EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'Mean_epoch', 'log', 'PSD', 10*log10(mean(PSD')+1));
         EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'Mean_epoch', 'log', 'f', f); 
-%         EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'Mean_epoch', 'log', 'gamma', mean(log_gamma));
-%         EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'Mean_epoch', 'log', 'beta', mean(log_beta));
-%         EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'Mean_epoch', 'log', 'alpha', mean(log_alpha));
-%         EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'Mean_epoch', 'log', 'theta', mean(log_theta));
-%         EEGset = setfield(EEGset, 'SpectralAnalysis', chs{ch_num}, 'Mean_epoch', 'log', 'delta', mean(log_delta));
+
     end
 
     EEGset.setname = [EEGset.setname, '_PSD'];

@@ -47,19 +47,20 @@ function EEGset = Epoching(set_list, varargin)
     
     % epoch 정보를 저장할 구조체 선언
     event = struct('type', [], 'latency', [], 'urevent', [], 'epoch', []); 
-    event(1).type = 'S'; %홀수 epoching start 지점들 모음
+    event(1).type = 'S';
     event(1).latency = 1;
     event(1).urevent = 1;
     event(1).epoch = 1;
 
-    event(2).type = 'E'; %짝수 epoching end 지점들 모음
+    event(2).type = 'E';
     event(2).latency = window*fs;
     event(2).urevent = 2;
     event(2).epoch = 1;
 
-
+%     fprintf("\n\n%d%%", 0);
+%     now_per = 0;
     iter = 1;
-    while event(2*(iter-1)+2).latency + latency <= total_length %epoching이 전체 길이 넘어간다면
+    while event(2*(iter-1)+2).latency + latency <= total_length
 %         pause(0.00001);
 %         now_per = round((2*iter+1)/total_length*100);
 %         if now_per < 10

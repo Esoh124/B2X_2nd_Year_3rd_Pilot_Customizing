@@ -16,10 +16,16 @@ close all;
 % --Data preparation
 data_path = 'C:\Users\USER\Desktop\converted_B2X2\txt';
 eog_path = 'C:\Users\USER\Desktop\B2X_data\eog_ecg_mat';
-
+exception_path = "./exception.txt";
 % Choose the subjects who are goning to be analyzed
 % choose_sub = [1:20];
 choose_sub = [1:20];
+
+fid = fopen(exception_path, 'r');
+data = textscan(fid, '%f');
+fclose(fid);
+number_array = data{1};
+choose_sub(number_array) = [];
 
 f = dir(data_path);
 f = f(3:sum([f.isdir]))
@@ -40,8 +46,8 @@ disp(' ');
 %% set the flags for the functions below whether run or not
 %       mat2set    Filtering    SessionDividing     ICA_component_calculation EOG_coh_remove    ECG_coh_remove     Epoching
 %       CalPSD
-flag = [0           0           0                   0                         1                 1                  0 ...
-        0];
+flag = [0           0           0                   0                         0                 0                  0 ...
+        1];
 %% mat2set
 warning('off')
 if flag(1) == 1
@@ -215,23 +221,13 @@ if flag(6) == 1
     end
 end
 
-%% Manually Name Change
-% for sub_i = 1 : length(f)
-%     set_list= dir([f(sub_i).folder, '\', f(sub_i).name, '\EEG\EEGset\*_ICA.set']);
-%     
-%     disp([f(sub_i).name]);
-%     for set_num = 1 : length(set_list)
-%         ManualNameChange(set_list(set_num));
-%     end
-% end
-
 %% Epoching
 if flag(7) == 1
     disp('--------------------------EPOCHING------------------------')
     for sub_num = 1 : length(f)
         disp([f(sub_num).name]);
 
-        set_list = dir([f(sub_num).folder, '\', f(sub_num).name, '\EEGset\*_rmICA.set']);
+        set_list = dir([f(sub_num).folder, '\', f(sub_num).name, '\EEGset\*_rmECG.set']);
                
         for set_num = 1 : length(set_list)
             EEGset = Epoching(set_list(set_num), 'save', 1);
