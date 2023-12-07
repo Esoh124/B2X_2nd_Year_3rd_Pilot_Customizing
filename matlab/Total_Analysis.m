@@ -46,8 +46,8 @@ disp(' ');
 %% set the flags for the functions below whether run or not
 %       mat2set    Filtering    SessionDividing     ICA_component_calculation EOG_coh_remove    ECG_coh_remove     Epoching
 %       CalPSD     Change
-flag = [0           0           0                   0                         0                 0                  1 ...
-        1           1];
+flag = [0           0           0                   0                         0                 0                  0 ...
+        0           1];
 %% mat2set
 warning('off')
 if flag(1) == 1
