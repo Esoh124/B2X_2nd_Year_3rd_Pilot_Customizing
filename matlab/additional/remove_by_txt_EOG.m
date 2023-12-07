@@ -6,7 +6,6 @@ ECG_txt = 'Data_check_result_ECG';
 fid = fopen(EOG_txt, 'r');
 
 disp(fid)
-number_array = [];
 
 data = textscan(fid, '%f');
 fclose(fid);
@@ -43,7 +42,6 @@ i=1;
 % 4라면 그냥 그대로 저장
 % 5라면 특별 케이스 vert 2개 hori 1개 제거
 
-i=73;
 exception = [];
 disp(number_array);
 %% Remove EOG
@@ -57,7 +55,7 @@ for sub_i = 1 : length(f)
         EEGset= pop_loadset([set_list(mat_i).folder, '\', set_list(mat_i).name]);
         if number_array(i) == 0                 %데이터 지움
             disp('Delete data');
-            exception = [exception f(sub_i).name];
+            exception = [exception sub_i];
             i = i+ (4 - mat_i)+1;
             break;
         elseif number_array(i) == 1             %EOG 1만 지움

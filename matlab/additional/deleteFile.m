@@ -19,6 +19,7 @@ if sum(choose_sub)>0
     f = f(choose_sub);
 end
 
+
 %% Remove EOG
 for sub_i = 1 : length(f)
     set_list = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*rmECG.set']);

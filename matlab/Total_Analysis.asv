@@ -46,8 +46,8 @@ disp(' ');
 %% set the flags for the functions below whether run or not
 %       mat2set    Filtering    SessionDividing     ICA_component_calculation EOG_coh_remove    ECG_coh_remove     Epoching
 %       CalPSD     Change
-flag = [0           0           0                   0                         0                 0                  1 ...
-        1           1];
+flag = [0           0           0                   0                         0                 0                  0 ...
+        1];
 %% mat2set
 warning('off')
 if flag(1) == 1
@@ -99,6 +99,9 @@ if flag(4) == 1
     clear set_list;
     disp('--------------------  ICA Calculation  --------------------')
     for sub_i = 1 : length(f)
+%         set_list(1:2) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_base.set']);  
+%         set_list(3:4) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_stim.set']);
+%         set_list(5:6) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_reco.set']);
         set_list(1:2) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_base1.set']);
         set_list(3:4) = dir([f(sub_i).folder, '\', f(sub_i).name, '\EEGset\*_reco1.set']);
 
@@ -262,28 +265,35 @@ if flag(9) == 1
     for sub_num = 1 : length(f)
         disp([f(sub_num).name]);
         set_list = dir([f(sub_num).folder, '\', f(sub_num).name, '\EEGset\*_PSD.set']);
-        n020_list = [];
-        s0_list = [];
+        n020_list = struct();
+        s0_list = struct();
    
         for set_num = 1 : length(set_list)
             if(contains(set_list(set_num).name, 'N020'))
-                n020_list = [n020_list, set_list(set_num)];
+                n020_list(end+1) = set_list(set_num);
             elseif(contains(set_list(set_num).name, 'S0'))
-                s0_list = [s0_list, set_list(set_num)];
+                s0_list(end+1) = set_list(set_num);
             else
                 break;
             end
+            Change = setfield(Change, (f(sub_num).name), 'S0', change(s0_list, 'save', 1));
+            Change = setfield(Change, (f(sub_num).name), 'N020', change(n020_list, 'save', 1));
         end
-        Change = setfield(Change, genvarname(f(sub_num).name), 'S0', change(s0_list, 'save', 1));
-        Change = setfield(Change, genvarname((f(sub_num).name)), 'N020', change(n020_list, 'save', 1));
-
     end
     save('Change.mat', "Change");
 end
-
-%% K-means
-
-
+%% EDA
+% 
+% if flag(9) == 1
+%     disp('--------------------------EDA------------------------')
+%     for sub_num = 1 : length(f)
+%         disp([f(sub_num).name]);
+%         set_list = dir([f(sub_num).folder, '\', f(sub_num).name, '\EEGset\*_PSD.set']);
+%         for set_num = 1 : length(set_list)
+%             EEGset = EDA(set_list(set_num), 'save', 1);
+%         end
+%     end
+% end
 
 
 
