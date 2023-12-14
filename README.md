@@ -1,11 +1,9 @@
 ## 1. Python 
 - txt2mat.jpynb: Convert .mat file to .txt
+- clustering.jpynb: Cluster the data using k-means and Gaussian Mixture model
 
 ## 2. Matlab
-- EEG analysis using EEGLAB
-
-## Convert and analyze EEG data automatically
-
+- Total_Analysis.mat: EEG analysis using EEGLAB
 1. mat2set
 2. Filtering
 3. SessionDividing
